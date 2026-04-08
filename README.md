@@ -1,0 +1,1 @@
+# Backend проекта MeteoVisualizer
