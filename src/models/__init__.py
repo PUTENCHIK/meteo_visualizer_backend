@@ -2,6 +2,9 @@ from src.models.auth.permission import Permission as Permission
 from src.models.auth.role import Role as Role
 from src.models.auth.role_permission import RolePermission as RolePermission
 from src.models.auth.user import User as User
+from src.models.base.auditable_model import AuditableModel as AuditableModel
+from src.models.base.base import Base as Base
+from src.models.base.many_to_many_model import ManyToManyModel as ManyToManyModel
 from src.models.complexes.complex import Complex as Complex
 from src.models.complexes.complex_user import ComplexUser as ComplexUser
 from src.models.complexes.mast import Mast as Mast

@@ -16,5 +16,7 @@ class Permission(AuditableModel, table=True):
     description: str = Field(nullable=False)
 
     roles: List["Role"] = Relationship(
-        back_populates="permissions", link_model=RolePermission
+        back_populates="permissions",
+        link_model=RolePermission,
+        sa_relationship_kwargs={"overlaps": "role,permission"},
     )

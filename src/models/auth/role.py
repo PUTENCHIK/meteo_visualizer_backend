@@ -23,5 +23,7 @@ class Role(AuditableModel, table=True):
     children: List["Role"] = Relationship(back_populates="parent")
     users: List["User"] = Relationship(back_populates="role")
     permissions: List["Permission"] = Relationship(
-        back_populates="roles", link_model=RolePermission
+        back_populates="roles",
+        link_model=RolePermission,
+        sa_relationship_kwargs={"overlaps": "role,permission"},
     )

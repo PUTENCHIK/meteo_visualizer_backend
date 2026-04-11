@@ -18,4 +18,4 @@ class MeasureColor(AuditableModel, table=True):
     value: str = Field(nullable=False, max_length=6)
     percent: Decimal = Field(sa_column=Column(Numeric(precision=3, scale=2)))
 
-    measure: "Measure" = Relationship(back_populates="aliases")
+    measure: "Measure" = Relationship(back_populates="colors")

@@ -27,5 +27,11 @@ class Complex(AuditableModel, table=True):
     creator: "User" = Relationship(back_populates="created_complexes")
     masts: List["Mast"] = Relationship(back_populates="complex")
     users: List["User"] = Relationship(
-        back_populates="complexes", link_model=ComplexUser
+        back_populates="complexes",
+        link_model=ComplexUser,
+        sa_relationship_kwargs={
+            "primaryjoin": "Complex.id == ComplexUser.complex_id",
+            "secondaryjoin": "User.id == ComplexUser.user_id",
+            "overlaps": "user,complex",
+        },
     )

@@ -17,8 +17,11 @@ class ComplexUser(ManyToManyModel, table=True):
     user_id: UUID = Field(foreign_key="users.id", primary_key=True)
     creator_id: Optional[UUID] = Field(foreign_key="users.id", default=None)
 
-    complex: "Complex" = Relationship(back_populates="users")
-    user: "User" = Relationship(back_populates="complexes")
+    complex: "Complex" = Relationship()
+    user: "User" = Relationship(
+        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.user_id]"}
+    )
     creator: Optional["User"] = Relationship(
-        back_populates="created_complex_user_links"
+        back_populates="created_complex_user_links",
+        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.creator_id]"},
     )

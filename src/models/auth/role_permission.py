@@ -18,8 +18,8 @@ class RolePermission(ManyToManyModel, table=True):
     permission_id: UUID = Field(foreign_key="permissions.id", primary_key=True)
     creator_id: Optional[UUID] = Field(foreign_key="users.id", default=None)
 
-    role: "Role" = Relationship(back_populates="permissions")
-    permission: "Permission" = Relationship(back_populates="roles")
+    role: "Role" = Relationship()
+    permission: "Permission" = Relationship()
     creator: Optional["User"] = Relationship(
         back_populates="created_role_permission_links"
     )

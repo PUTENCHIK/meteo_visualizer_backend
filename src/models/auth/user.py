@@ -27,14 +27,21 @@ class User(AuditableModel, table=True):
 
     role: "Role" = Relationship(back_populates="users")
     complexes: List["Complex"] = Relationship(
-        back_populates="users", link_model=ComplexUser
+        back_populates="users",
+        link_model=ComplexUser,
+        sa_relationship_kwargs={
+            "primaryjoin": "User.id == ComplexUser.user_id",
+            "secondaryjoin": "Complex.id == ComplexUser.complex_id",
+            "overlaps": "user,complex",
+        },
     )
     created_complexes: List["Complex"] = Relationship(back_populates="creator")
     created_role_permission_links: List["RolePermission"] = Relationship(
         back_populates="creator"
     )
     created_complex_user_links: List["ComplexUser"] = Relationship(
-        back_populates="creator"
+        back_populates="creator",
+        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.creator_id]"},
     )
     measures: List["Measure"] = Relationship(back_populates="user")
 
