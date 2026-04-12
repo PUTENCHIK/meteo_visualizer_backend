@@ -54,5 +54,7 @@ class AuthService:
         new_user = User(
             **data.model_dump(exclude={"password"}), password_hash=password_hash
         )
+        db_user = await self.user_repo.add(new_user)
+        self.user_repo.commit_refresh(db_user)
 
-        return await self.user_repo.add(new_user)
+        return db_user 

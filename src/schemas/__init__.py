@@ -10,9 +10,24 @@ from src.schemas.responses import (
 )
 from src.schemas.roles import (
     CreateRoleSchema as CreateRoleSchema,
+    UpdateRoleSchema as UpdateRoleSchema,
     RoleBaseSchema as RoleBaseSchema,
     RoleSchema as RoleSchema,
     RoleWithParentSchema as RoleWithParentSchema,
-    RoleWithUsersSchema as RoleWithUsersSchema,
-    UpdateRoleSchema as UpdateRoleSchema,
+    RoleWithPermissionsSchema as RoleWithPermissionsSchema,
 )
+from src.schemas.permissions import (
+    CreatePermissionSchema as CreatePermissionSchema,
+    UpdatePermissionSchema as UpdatePermissionSchema,
+    PermissionSchema as PermissionSchema,
+    PermissionWithRolesSchema as PermissionWithRolesSchema,
+)
+from src.schemas.roles_permissions import (
+    AddPermissionToRoleSchema as AddPermissionToRoleSchema,
+    DeletePermissionToRoleSchema as DeletePermissionToRoleSchema,
+    CreateRolePermissionSchema as CreateRolePermissionSchema,
+    RolePermissionSchema as RolePermissionSchema,
+)
+
+RoleWithPermissionsSchema.model_rebuild()
+PermissionWithRolesSchema.model_rebuild()

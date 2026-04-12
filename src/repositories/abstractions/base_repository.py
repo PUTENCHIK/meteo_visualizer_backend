@@ -41,9 +41,13 @@ class BaseRepository(ABC, Generic[T]):
 
     async def add(self, obj: T) -> T:
         self.session.add(obj)
-        await self.session.commit()
-        await self.session.refresh(obj)
+        await self.session.flush()
         return obj
+    
+    async def add_many(self, objects: List[T]) -> List[T]:
+        self.session.add_all(objects)
+        await self.session.flush()
+        return objects
 
     async def update(self, db_obj: T, data: BaseModel) -> T:
         update_data = data.model_dump(exclude_unset=True)
@@ -52,9 +56,24 @@ class BaseRepository(ABC, Generic[T]):
             if hasattr(db_obj, field):
                 setattr(db_obj, field, update_data[field])
 
-        return await self.add(db_obj)
+        self.session.add(db_obj)
+        await self.session.flush()
+        return db_obj
 
     async def delete(self, obj: T) -> bool:
         await self.session.delete(obj)
-        await self.session.commit()
+        await self.session.flush()
         return True
+    
+    async def flush(self):
+        await self.session.flush()
+
+    async def commit(self):
+        await self.session.commit()
+    
+    async def refresh(self, obj: T):
+        await self.session.refresh(obj)
+    
+    async def commit_refresh(self, obj: T):
+        await self.session.commit()
+        await self.session.refresh(obj)

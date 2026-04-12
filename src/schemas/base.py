@@ -15,8 +15,11 @@ class BaseModelSchema(BaseSchema):
     model_config = ConfigDict(from_attributes=True)
 
 
-class AuditableModelSchema(BaseModelSchema):
+class UuidModel(BaseSchema):
     id: UUID
+
+
+class AuditableModelSchema(UuidModel, BaseModelSchema):
     updated_at: datetime
     deleted_at: Optional[datetime]
 

@@ -9,7 +9,7 @@ from src.schemas import (
     UserSchema,
 )
 from src.services import AuthService
-from src.utils import default_responses
+from src.utils import get_responses
 
 auth_router = APIRouter(prefix="/auth", tags=["Авторизация"])
 
@@ -18,11 +18,12 @@ auth_router = APIRouter(prefix="/auth", tags=["Авторизация"])
     "/signin",
     response_model=AuthTokensSchema,
     status_code=200,
-    responses=default_responses(
+    responses=get_responses(
         [
             ResponseModel(status_code=401, description="Неверный пароль"),
             ResponseModel(status_code=404, description="Пользователь не найден"),
-        ]
+        ],
+        include_auth=False
     ),
 )
 async def signin(
@@ -35,10 +36,11 @@ async def signin(
     "/signup",
     response_model=UserSchema,
     status_code=200,
-    responses=default_responses(
+    responses=get_responses(
         [
             ResponseModel(status_code=409, description="Логин уже используется"),
-        ]
+        ],
+        include_auth=False
     ),
 )
 async def signup(

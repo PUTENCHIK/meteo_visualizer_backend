@@ -1,18 +1,18 @@
-from typing import List, Optional
+from typing import List, Optional, TYPE_CHECKING
 from uuid import UUID
 
-from src.schemas.auth import UserSchema
-from src.schemas.base import AuditableModelSchema, BaseSchema
+from src.schemas.base import UuidModel, AuditableModelSchema, BaseSchema
+if TYPE_CHECKING:
+    from src.schemas.permissions import PermissionSchema
 
 
 class RoleBaseSchema(BaseSchema):
     name: str
-    parent_id: Optional[UUID]
+    parent_id: Optional[UUID] = None
 
 
-class CreateRoleSchema(RoleBaseSchema):
-    pass
-
+class CreateRoleSchema(UuidModel, RoleBaseSchema):
+    id: Optional[UUID] = None
 
 class UpdateRoleSchema(RoleBaseSchema):
     name: Optional[str] = None
@@ -28,5 +28,5 @@ class RoleWithParentSchema(RoleSchema):
     children: List["RoleSchema"]
 
 
-class RoleWithUsersSchema(RoleWithParentSchema):
-    users: List["UserSchema"]
+class RoleWithPermissionsSchema(RoleWithParentSchema):
+    permissions: List["PermissionSchema"]

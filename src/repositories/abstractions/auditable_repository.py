@@ -49,12 +49,10 @@ class AuditableRepository(BaseRepository[A]):
         else:
             obj.deleted_at = datetime.now(timezone.utc)
             self.session.add(obj)
-            await self.session.commit()
             return True
 
     async def restore(self, obj: A) -> A:
         obj.deleted_at = None
         self.session.add(obj)
-        await self.session.commit()
-        await self.session.refresh(obj)
+        await self.session.flush()
         return obj

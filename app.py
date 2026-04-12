@@ -3,14 +3,21 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response
 
-from src.routers import auth_router, roles_router
+from src.routers import auth_router, roles_router, permission_router
 from src.utils.exceptions import (
     AppException,
 )
+from src.utils.initial_data import InitialDataManager
+from src.db import async_session_maker
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    async with async_session_maker() as session:
+        manager = InitialDataManager()
+        await manager.sync(session)
+        await session.commit()
+
     yield
 
 
@@ -18,6 +25,7 @@ app = FastAPI(lifespan=lifespan)
 api_prefix = "/api"
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(roles_router, prefix=api_prefix)
+app.include_router(permission_router, prefix=api_prefix)
 
 
 @app.get("/api/status")
