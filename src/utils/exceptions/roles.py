@@ -1,13 +1,17 @@
 from uuid import UUID
 
-from src.utils.exceptions.base import (ConflictException, NotFoundException,
-                                       BadRequestException)
+from src.utils.exceptions.base import (
+    BadRequestException,
+    ConflictException,
+    NotFoundException,
+)
 
 
 class RoleNameAlreadyExistsException(ConflictException):
     def __init__(self, name: str, is_deleted: bool):
-        super().__init__(f"Роль '{name}' уже существует"
-                         f"{' (мягко удалена)' if is_deleted else ''}")
+        super().__init__(
+            f"Роль '{name}' уже существует{' (мягко удалена)' if is_deleted else ''}"
+        )
 
 
 class RoleNotFoundException(NotFoundException):
@@ -29,11 +33,12 @@ class RoleHasChildrenException(ConflictException):
     def __init__(self, id_: UUID, count: int):
         super().__init__(
             f"Роль ({id_.hex[:8]}) имеет {count} потомков-ролей и не может быть удалена"
-            )
+        )
 
 
 class RoleHasUsersException(ConflictException):
     def __init__(self, id_: UUID, count: int):
         super().__init__(
-            f"Роль ({id_.hex[:8]}) имеет {count} активных пользователей и не может быть удалена"
-            )
+            f"Роль ({id_.hex[:8]}) имеет {count} активных "
+            f"пользователей и не может быть удалена"
+        )

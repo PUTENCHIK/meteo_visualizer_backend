@@ -2,9 +2,13 @@ from fastapi import Depends
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.db import get_session
-from src.repositories import (RoleRepository, UserRepository, 
-                              PermissionRepository, RolePermissionRepository)
-from src.services import AuthService, RoleService, PermissionService
+from src.repositories import (
+    PermissionRepository,
+    RolePermissionRepository,
+    RoleRepository,
+    UserRepository,
+)
+from src.services import AuthService, PermissionService, RoleService, UserService
 
 
 class ServiceFactory:
@@ -21,9 +25,13 @@ class ServiceFactory:
         return RoleService(
             RoleRepository(session),
             PermissionRepository(session),
-            RolePermissionRepository(session)
+            RolePermissionRepository(session),
         )
-    
+
     @staticmethod
     async def get_permission_service(session: AsyncSession = Depends(get_session)):
         return PermissionService(PermissionRepository(session))
+
+    @staticmethod
+    async def get_user_service(session: AsyncSession = Depends(get_session)):
+        return UserService(UserRepository(session))

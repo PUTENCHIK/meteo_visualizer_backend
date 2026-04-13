@@ -24,8 +24,10 @@ class PermissionRepository(AuditableRepository[Permission]):
         )
 
     async def get_by_name(
-            self, name: str, include_deleted: bool = False) -> Optional[Permission]:
+        self, name: str, include_deleted: bool = False
+    ) -> Optional[Permission]:
         statement = self._get_all_query(include_deleted).where(
-            func.lower(Permission.name) == name.lower())
+            func.lower(Permission.name) == name.lower()
+        )
         result = await self.session.exec(statement)
         return result.one_or_none()

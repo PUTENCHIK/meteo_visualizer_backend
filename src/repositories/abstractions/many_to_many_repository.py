@@ -1,7 +1,5 @@
 from abc import abstractmethod
-from typing import List, Optional, TypeVar
-
-from sqlalchemy.orm import with_loader_criteria
+from typing import Optional, TypeVar
 
 from src.models import ManyToManyModel
 from src.repositories.abstractions.base_repository import BaseRepository
@@ -13,7 +11,7 @@ class ManyToManyRepository(BaseRepository[M]):
     """
     Расширение для базового репозитория для сущностей типа ManyToManyModel
     """
-    
+
     @abstractmethod
     def __init__(self, model, session):
         super().__init__(model, session)

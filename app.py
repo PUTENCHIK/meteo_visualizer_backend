@@ -3,12 +3,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, Response
 
-from src.routers import auth_router, roles_router, permission_router
+from src.db import async_session_maker
+from src.routers import auth_router, permission_router, roles_router
 from src.utils.exceptions import (
     AppException,
 )
 from src.utils.initial_data import InitialDataManager
-from src.db import async_session_maker
 
 
 @asynccontextmanager

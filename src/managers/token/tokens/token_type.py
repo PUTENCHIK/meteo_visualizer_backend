@@ -1,6 +1,6 @@
-from enum import Enum, auto
+from enum import Enum
 
 
 class TokenType(Enum):
-    ACCESS = auto()
-    REFRESH = auto()
+    ACCESS = "access"
+    REFRESH = "refresh"

@@ -1,4 +1,5 @@
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
+
 from src.schemas.base import AuditableModelSchema, BaseSchema
 
 if TYPE_CHECKING:
@@ -8,6 +9,7 @@ if TYPE_CHECKING:
 class PermissionBaseSchema(BaseSchema):
     name: str
     description: str
+
 
 class CreatePermissionSchema(PermissionBaseSchema):
     pass

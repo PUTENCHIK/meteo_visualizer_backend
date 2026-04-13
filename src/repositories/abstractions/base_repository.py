@@ -43,7 +43,7 @@ class BaseRepository(ABC, Generic[T]):
         self.session.add(obj)
         await self.session.flush()
         return obj
-    
+
     async def add_many(self, objects: List[T]) -> List[T]:
         self.session.add_all(objects)
         await self.session.flush()
@@ -64,16 +64,16 @@ class BaseRepository(ABC, Generic[T]):
         await self.session.delete(obj)
         await self.session.flush()
         return True
-    
+
     async def flush(self):
         await self.session.flush()
 
     async def commit(self):
         await self.session.commit()
-    
+
     async def refresh(self, obj: T):
         await self.session.refresh(obj)
-    
+
     async def commit_refresh(self, obj: T):
         await self.session.commit()
         await self.session.refresh(obj)

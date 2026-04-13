@@ -1,7 +1,8 @@
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 from uuid import UUID
 
-from src.schemas.base import UuidModel, AuditableModelSchema, BaseSchema
+from src.schemas.base import AuditableModelSchema, BaseSchema, UuidModel
+
 if TYPE_CHECKING:
     from src.schemas.permissions import PermissionSchema
 
@@ -13,6 +14,7 @@ class RoleBaseSchema(BaseSchema):
 
 class CreateRoleSchema(UuidModel, RoleBaseSchema):
     id: Optional[UUID] = None
+
 
 class UpdateRoleSchema(RoleBaseSchema):
     name: Optional[str] = None

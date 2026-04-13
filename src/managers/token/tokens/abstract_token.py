@@ -9,11 +9,11 @@ class AbstractToken(ABC):
     Абстрактрая модель токена приложения
     """
 
-    __jti: UUID
+    _jti: UUID
 
     @property
     def jti(self) -> UUID:
-        return self.__jti
+        return self._jti
 
     @property
     @abstractmethod
@@ -22,4 +22,4 @@ class AbstractToken(ABC):
 
     def __init__(self):
         super().__init__()
-        self.__jti = uuid4()
+        self._jti = uuid4()

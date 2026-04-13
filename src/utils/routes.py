@@ -13,8 +13,7 @@ AUTH_RESPONSES: List[ResponseModel] = [
 
 
 def get_responses(
-    responses: List[ResponseModel] = None,
-    include_auth: bool = True
+    responses: List[ResponseModel] = None, include_auth: bool = True
 ) -> Dict[int | str, Dict[str, Any]]:
     result = DEFAULT_RESPONSES[:]
     if include_auth:

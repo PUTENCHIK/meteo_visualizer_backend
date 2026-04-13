@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 
 from src.factories import ServiceFactory
 from src.schemas import (
     AuthTokensSchema,
+    RefreshTokenSchema,
     ResponseModel,
     SigninSchema,
     SignupSchema,
@@ -23,12 +25,14 @@ auth_router = APIRouter(prefix="/auth", tags=["Авторизация"])
             ResponseModel(status_code=401, description="Неверный пароль"),
             ResponseModel(status_code=404, description="Пользователь не найден"),
         ],
-        include_auth=False
+        include_auth=False,
     ),
 )
 async def signin(
-    data: SigninSchema, service: AuthService = Depends(ServiceFactory.get_auth_service)
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    service: AuthService = Depends(ServiceFactory.get_auth_service),
 ):
+    data = SigninSchema(login=form_data.username, password=form_data.password)
     return await service.signin(data)
 
 
@@ -40,10 +44,29 @@ async def signin(
         [
             ResponseModel(status_code=409, description="Логин уже используется"),
         ],
-        include_auth=False
+        include_auth=False,
     ),
 )
 async def signup(
     data: SignupSchema, service: AuthService = Depends(ServiceFactory.get_auth_service)
 ):
     return await service.signup(data)
+
+
+@auth_router.post(
+    "/refresh",
+    response_model=AuthTokensSchema,
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=401, description="Токен устарел"),
+            ResponseModel(status_code=401, description="Невалидный токен"),
+        ],
+        include_auth=False,
+    ),
+)
+async def refresh_tokens(
+    data: RefreshTokenSchema,
+    service: AuthService = Depends(ServiceFactory.get_auth_service),
+):
+    return await service.refresh(data)

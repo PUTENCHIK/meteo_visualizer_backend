@@ -1,9 +1,11 @@
 from typing import Optional
 from uuid import UUID
 
-
 from src.utils.exceptions.base import (
-    ConflictException, NotFoundException, BadRequestException)
+    BadRequestException,
+    ConflictException,
+    NotFoundException,
+)
 
 
 class PermissionNameAlreadyExistsException(ConflictException):
@@ -13,7 +15,7 @@ class PermissionNameAlreadyExistsException(ConflictException):
 
 class PermissionNotFoundException(NotFoundException):
     def __init__(self, id_: Optional[UUID] = None, name: Optional[str] = None):
-        if (id_ is not None):
+        if id_ is not None:
             idtf = f" ({id_.hex[:8]})"
         elif name is not None:
             idtf = f" '{name}'"

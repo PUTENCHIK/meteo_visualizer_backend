@@ -33,6 +33,13 @@ class UserSchema(AuditableModelSchema, UserBaseSchema):
     pass
 
 
-class AuthTokensSchema(BaseSchema):
-    access: str
-    refresh: str
+class RefreshTokenSchema(BaseSchema):
+    refresh_token: str
+
+
+class AuthTokensSchema(RefreshTokenSchema):
+    access_token: str
+    token_type: str = "bearer"
+
+    class Config:
+        populate_by_name = True

@@ -4,16 +4,11 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 
 from src.factories import ServiceFactory
-from src.schemas import (
-    UpdatePermissionSchema,
-    PermissionSchema,
-    ResponseModel
-)
+from src.schemas import PermissionSchema, ResponseModel, UpdatePermissionSchema
 from src.services import PermissionService
 from src.utils import get_responses
 
 permission_router = APIRouter(prefix="/permissions", tags=["Разрешения ролей"])
-
 
 
 @permission_router.get(

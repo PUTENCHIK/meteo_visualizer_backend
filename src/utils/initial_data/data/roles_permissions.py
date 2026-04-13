@@ -1,7 +1,7 @@
 from uuid import UUID
+
 from src.schemas import CreateRolePermissionSchema as RP
 from src.utils.permissions import SystemPermission as value
-
 
 INITIAL_ROLES_PERMISSIONS = [
     RP(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=value.USER_READ),
