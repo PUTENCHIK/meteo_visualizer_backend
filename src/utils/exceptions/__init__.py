@@ -10,7 +10,6 @@ from src.utils.exceptions.auth import (
     RoleNotSetException as RoleNotSetException,
     TokenBlockedException as TokenBlockedException,
     TokenExpiredException as TokenExpiredException,
-    UserNotFoundException as UserNotFoundException,
 )
 from src.utils.exceptions.base import (
     AppException as AppException,
@@ -32,4 +31,8 @@ from src.utils.exceptions.roles import (
     RoleNotDeletedException as RoleNotDeletedException,
     RoleNotFoundException as RoleNotFoundException,
     RoleParentCantBeSameException as RoleParentCantBeSameException,
+)
+from src.utils.exceptions.users import (
+    UserNotDeletedException as UserNotDeletedException,
+    UserNotFoundException as UserNotFoundException,
 )

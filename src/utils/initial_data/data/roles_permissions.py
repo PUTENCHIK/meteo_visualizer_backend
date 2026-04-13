@@ -25,4 +25,8 @@ INITIAL_ROLES_PERMISSIONS = [
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
         permission=value.PERMISSION_UPDATE,
     ),
+    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_READ),
+    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_RESTORE),
+    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_UPDATE),
+    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_DELETE),
 ]

@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse, Response
 
 from src.db import async_session_maker
 from src.managers import TokenManager
-from src.routers import auth_router, permission_router, roles_router
+from src.routers import auth_router, permission_router, roles_router, users_router
 from src.utils.exceptions import (
     AppException,
 )
@@ -30,6 +30,7 @@ api_prefix = "/api"
 app.include_router(auth_router, prefix=api_prefix)
 app.include_router(roles_router, prefix=api_prefix)
 app.include_router(permission_router, prefix=api_prefix)
+app.include_router(users_router, prefix=api_prefix)
 
 
 @app.get("/api/status")

@@ -74,9 +74,9 @@ class AuthService:
             password_hash=password_hash,
         )
         db_user = await self.user_repo.add(new_user)
-        await self.user_repo.commit_refresh(db_user)
+        await self.user_repo.commit()
 
-        return db_user
+        return await self.user_repo.get_by_id(db_user.id)
 
     async def refresh(self, data: RefreshTokenSchema) -> AuthTokensSchema:
         refresh_token = RefreshToken.decode(data.refresh_token)

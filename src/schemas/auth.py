@@ -1,35 +1,12 @@
-from uuid import UUID
-
-from src.schemas.base import AuditableModelSchema, BaseSchema
-
-
-class NamesSchema(BaseSchema):
-    lastname: str
-    firstname: str
-    secondname: str
-
-
-class LoginSchema(BaseSchema):
-    login: str
-
-
-class PasswordSchema(BaseSchema):
-    password: str
+from src.schemas.base import BaseSchema
+from src.schemas.users import LoginSchema, NamesSchema, PasswordSchema
 
 
 class SigninSchema(LoginSchema, PasswordSchema):
     pass
 
 
-class UserBaseSchema(NamesSchema, LoginSchema):
-    role_id: UUID
-
-
 class SignupSchema(NamesSchema, LoginSchema, PasswordSchema):
-    pass
-
-
-class UserSchema(AuditableModelSchema, UserBaseSchema):
     pass
 
 

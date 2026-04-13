@@ -3,7 +3,6 @@ from src.schemas.auth import (
     RefreshTokenSchema as RefreshTokenSchema,
     SigninSchema as SigninSchema,
     SignupSchema as SignupSchema,
-    UserSchema as UserSchema,
 )
 from src.schemas.permissions import (
     CreatePermissionSchema as CreatePermissionSchema,
@@ -28,6 +27,10 @@ from src.schemas.roles_permissions import (
     CreateRolePermissionSchema as CreateRolePermissionSchema,
     DeletePermissionToRoleSchema as DeletePermissionToRoleSchema,
     RolePermissionSchema as RolePermissionSchema,
+)
+from src.schemas.users import (
+    UpdateUserSchema as UpdateUserSchema,
+    UserSchema as UserSchema,
 )
 
 RoleWithPermissionsSchema.model_rebuild()

@@ -13,3 +13,8 @@ class SystemPermission(Enum):
 
     PERMISSION_READ = "permission:read"
     PERMISSION_UPDATE = "permission:update"
+
+    USER_READ = "user:read"
+    USER_UPDATE = "user:update"
+    USER_RESTORE = "user:restore"
+    USER_DELETE = "user:delete"
