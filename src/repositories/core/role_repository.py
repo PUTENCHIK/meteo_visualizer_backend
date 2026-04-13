@@ -37,7 +37,7 @@ class RoleRepository(AuditableRepository[Role]):
         result = await self.session.exec(statement)
         return result.one_or_none()
 
-    async def get_all_permissions(self, role_id: UUID) -> List[Permission]:
+    async def get_role_permissions(self, role_id: UUID) -> List[Permission]:
         base_query = (
             select(Role)
             .where(Role.id == role_id)

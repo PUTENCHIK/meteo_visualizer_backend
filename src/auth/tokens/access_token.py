@@ -2,8 +2,9 @@ from uuid import UUID
 
 import jwt
 
-from src.managers.token.tokens.auth_token import AuthToken
-from src.managers.token.tokens.token_type import TokenType
+from src.auth.enums import TokenType
+from src.auth.tokens.auth_token import AuthToken
+from src.config import config
 from src.utils.exceptions import InvalidTokenException, TokenExpiredException
 
 
@@ -25,7 +26,9 @@ class AccessToken(AuthToken):
     def decode(jwt_token: str) -> "AccessToken":
         try:
             payload = jwt.decode(
-                jwt_token, AccessToken.SECRET_KEY, algorithms=[AccessToken.ALGORITHM]
+                jwt_token,
+                config.auth_token_secret_key,
+                algorithms=[config.auth_token_algorithm],
             )
             return AccessToken.new(payload, TokenType.ACCESS)
         except jwt.DecodeError:

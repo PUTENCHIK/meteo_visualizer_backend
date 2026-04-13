@@ -18,7 +18,7 @@ class ServiceFactory:
 
     @staticmethod
     async def get_auth_service(session: AsyncSession = Depends(get_session)):
-        return AuthService(UserRepository(session))
+        return AuthService(UserRepository(session), RoleRepository(session))
 
     @staticmethod
     async def get_role_service(session: AsyncSession = Depends(get_session)):

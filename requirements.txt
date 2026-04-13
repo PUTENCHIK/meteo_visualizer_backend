@@ -4,3 +4,8 @@ ruff
 alembic
 sqlmodel
 asyncpg
+pwdlib[argon2]
+redis
+PyJWT
+python-multipart
+pydantic-settings

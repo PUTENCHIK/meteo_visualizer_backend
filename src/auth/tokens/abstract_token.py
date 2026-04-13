@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID, uuid4
 
-from src.managers.token.tokens.token_type import TokenType
+from src.auth.enums import TokenType
 
 
 class AbstractToken(ABC):

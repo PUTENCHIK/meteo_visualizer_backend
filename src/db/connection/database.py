@@ -4,7 +4,9 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-DATABASE_URL = "postgresql+asyncpg://postgres:password@localhost:5432/meteo_visualizer"
+from src.config import config
+
+DATABASE_URL = str(config.database_url)
 
 engine = create_async_engine(DATABASE_URL, echo=False, future=True)
 

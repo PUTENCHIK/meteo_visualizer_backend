@@ -4,8 +4,10 @@ from uuid import UUID
 import redis.asyncio as redis
 from redis import Redis
 
-from src.managers.token.tokens import AccessToken, AuthToken, RefreshToken
+from src.auth.tokens import AccessToken, AuthToken, RefreshToken
+from src.config import config
 from src.utils import SingletonMetaclass
+from src.utils.exceptions import RedisClientUnavailableException
 
 
 class TokenManager(metaclass=SingletonMetaclass):
@@ -16,14 +18,23 @@ class TokenManager(metaclass=SingletonMetaclass):
     REFRESH_PREFIX = "refresh"
     BLOCKED_PREFIX = "blocked"
 
-    __redis_client: Redis = redis.from_url("redis://localhost", decode_responses=True)
+    __redis_client: Redis = None
 
     @property
     def client(self) -> Redis:
         return self.__redis_client
 
     def __init__(self):
-        pass
+        if not self.__redis_client:
+            self.__redis_client = redis.from_url(
+                str(config.redis_url), decode_responses=True
+            )
+
+    async def ping(self):
+        try:
+            await self.client.ping()
+        except (redis.ConnectionError, ConnectionRefusedError):
+            raise RedisClientUnavailableException()
 
     def __refresh_token(self, user_id: UUID) -> str:
         return f"{self.REFRESH_PREFIX}:{user_id}"

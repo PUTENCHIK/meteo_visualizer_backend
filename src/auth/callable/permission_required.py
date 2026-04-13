@@ -1,14 +1,14 @@
 from fastapi import Depends
 
+from src.auth.enums import SystemPermission
 from src.factories import AuthFactory, ServiceFactory
 from src.models import User
 from src.services import AuthService
-from src.utils.permissions.system_permission import SystemPermission
 
 
 class PermissionRequired:
     """
-    Сущность зависимости
+    Callable-класс для проверки прав пользователя
     """
 
     __value: SystemPermission
@@ -24,14 +24,6 @@ class PermissionRequired:
         self,
         user: User = Depends(AuthFactory.get_current_user),
         service: AuthService = Depends(ServiceFactory.get_auth_service),
-    ):
-        pass
-        # has_permission =
-        # await service.check_user_permission(user.role_id, self.permission_name)
-
-        # if not has_permission:
-        #     raise HTTPException(
-        #         status_code=403,
-        #         detail=f"Недостаточно прав: требуется {self.permission_name}"
-        #     )
-        # return user
+    ) -> User:
+        await service.has_permission(user, self.value)
+        return user

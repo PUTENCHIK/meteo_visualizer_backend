@@ -1,14 +1,18 @@
 from uuid import UUID
 
+from src.auth.enums import SystemPermission
+from src.auth.tokens import RefreshToken
 from src.managers import PasswordManager, TokenManager
-from src.managers.token.tokens import RefreshToken
 from src.models import User
-from src.repositories import UserRepository
+from src.repositories import RoleRepository, UserRepository
 from src.schemas import AuthTokensSchema, RefreshTokenSchema, SigninSchema, SignupSchema
+from src.utils.constants import SIGNUP_ROLE_ID
 from src.utils.exceptions import (
     InvalidPasswordException,
     InvalidTokenException,
     LoginAlreadyUsesException,
+    PermissionDeniedException,
+    RoleNotSetException,
     TokenBlockedException,
     UserNotFoundException,
 )
@@ -20,6 +24,7 @@ class AuthService:
     """
 
     __user_repo: UserRepository
+    __role_repo: RoleRepository
     __token_manager: TokenManager = TokenManager()
     __password_manager: PasswordManager = PasswordManager()
 
@@ -28,19 +33,26 @@ class AuthService:
         return self.__user_repo
 
     @property
+    def role_repo(self) -> RoleRepository:
+        return self.__role_repo
+
+    @property
     def token_manager(self) -> TokenManager:
         return self.__token_manager
 
-    def __init__(self, user_repository: UserRepository):
-        self.__user_repo = user_repository
+    @property
+    def password_manager(self) -> PasswordManager:
+        return self.__password_manager
+
+    def __init__(self, user_repo: UserRepository, role_repo: RoleRepository):
+        self.__user_repo = user_repo
+        self.__role_repo = role_repo
 
     async def signin(self, data: SigninSchema) -> AuthTokensSchema:
         user = await self.user_repo.get_by_login(data.login)
         if not user:
             raise UserNotFoundException(login=data.login)
-        if not self.__password_manager.verify_password(
-            data.password, user.password_hash
-        ):
+        if not self.password_manager.verify_password(data.password, user.password_hash):
             raise InvalidPasswordException()
 
         access, refresh = self.token_manager.generate_tokens(user.id)
@@ -54,10 +66,12 @@ class AuthService:
         if user:
             raise LoginAlreadyUsesException(data.login)
 
-        password_hash = self.__password_manager.hash_password(data.password)
+        password_hash = self.password_manager.hash_password(data.password)
 
         new_user = User(
-            **data.model_dump(exclude={"password"}), password_hash=password_hash
+            **data.model_dump(exclude={"password"}),
+            role_id=SIGNUP_ROLE_ID,
+            password_hash=password_hash,
         )
         db_user = await self.user_repo.add(new_user)
         await self.user_repo.commit_refresh(db_user)
@@ -84,3 +98,15 @@ class AuthService:
         return AuthTokensSchema(
             access_token=new_access.jwt, refresh_token=new_refresh.jwt
         )
+
+    async def has_permission(self, user: User, permission: SystemPermission) -> bool:
+        if not user.role:
+            raise RoleNotSetException(user.id)
+
+        all_permissions = await self.role_repo.get_role_permissions(user.role_id)
+        has_perm = any(p.name == permission.value for p in all_permissions)
+
+        if not has_perm:
+            raise PermissionDeniedException(permission)
+
+        return has_perm

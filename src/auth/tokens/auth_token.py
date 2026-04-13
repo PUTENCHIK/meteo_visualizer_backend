@@ -4,8 +4,9 @@ from uuid import UUID
 
 import jwt
 
-from src.managers.token.tokens.abstract_token import AbstractToken
-from src.managers.token.tokens.token_type import TokenType
+from src.auth.enums import TokenType
+from src.auth.tokens.abstract_token import AbstractToken
+from src.config import config
 from src.utils.exceptions import InvalidTokenException, InvalidTokenTypeException
 
 
@@ -13,9 +14,6 @@ class AuthToken(AbstractToken):
     """
     Абстрактная модель токена авторизации
     """
-
-    SECRET_KEY = "a2387f975d59c03080284689f4de177e607db84932b1386f8d126c20b0f29137"
-    ALGORITHM = "HS256"
 
     _sub: UUID
     _exp_time: datetime
@@ -50,7 +48,9 @@ class AuthToken(AbstractToken):
 
     @property
     def jwt(self) -> str:
-        return jwt.encode(self.payload, self.SECRET_KEY, self.ALGORITHM)
+        return jwt.encode(
+            self.payload, config.auth_token_secret_key, config.auth_token_algorithm
+        )
 
     @classmethod
     def new(cls, payload: Dict[str, Any], expected_type: TokenType) -> Self:

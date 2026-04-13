@@ -2,8 +2,9 @@ from uuid import UUID
 
 import jwt
 
-from src.managers.token.tokens.auth_token import AuthToken
-from src.managers.token.tokens.token_type import TokenType
+from src.auth.enums import TokenType
+from src.auth.tokens.auth_token import AuthToken
+from src.config import config
 from src.utils.exceptions import InvalidTokenException, TokenExpiredException
 
 
@@ -25,7 +26,9 @@ class RefreshToken(AuthToken):
     def decode(jwt_token: str) -> "RefreshToken":
         try:
             payload = jwt.decode(
-                jwt_token, RefreshToken.SECRET_KEY, algorithms=[RefreshToken.ALGORITHM]
+                jwt_token,
+                config.auth_token_secret_key,
+                algorithms=[config.auth_token_algorithm],
             )
             return RefreshToken.new(payload, TokenType.REFRESH)
         except jwt.DecodeError:

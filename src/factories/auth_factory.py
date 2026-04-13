@@ -1,9 +1,10 @@
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
+from src.auth.tokens import AccessToken
 from src.factories.service_factory import ServiceFactory
 from src.managers import TokenManager
-from src.managers.token.tokens import AccessToken
+from src.models import User
 from src.services import UserService
 from src.utils.exceptions import TokenBlockedException
 
@@ -19,7 +20,7 @@ class AuthFactory:
     async def get_current_user(
         token: str = Depends(oauth2_scheme),
         user_service: UserService = Depends(ServiceFactory.get_user_service),
-    ):
+    ) -> User:
         token_manager = TokenManager()
         access_token = AccessToken.decode(token)
 

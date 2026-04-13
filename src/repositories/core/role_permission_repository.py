@@ -1,4 +1,4 @@
-from typing import Optional, override
+from typing import List, Optional, override
 from uuid import UUID
 
 from sqlalchemy.orm import selectinload
@@ -36,11 +36,11 @@ class RolePermissionRepository(ManyToManyRepository[RolePermission]):
                 RolePermission.role_id == role_id,
                 RolePermission.permission_id == permission_id,
             )
-            .options(
-                selectinload(RolePermission.role),
-                selectinload(RolePermission.permission),
-                selectinload(RolePermission.creator),
-            )
         )
         result = await self.session.exec(statement)
         return result.one_or_none()
+
+    async def get_by_role(self, role_id: UUID) -> List[RolePermission]:
+        statement = super()._get_all_query().where(RolePermission.role_id == role_id)
+        result = await self.session.exec(statement)
+        return result.all()

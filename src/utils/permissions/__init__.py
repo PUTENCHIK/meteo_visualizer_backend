@@ -1,1 +1,0 @@
-from src.utils.permissions.system_permission import SystemPermission as SystemPermission

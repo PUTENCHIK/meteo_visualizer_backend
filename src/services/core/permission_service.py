@@ -55,7 +55,10 @@ class PermissionService(AuditableService[Permission, PermissionRepository]):
     ) -> Permission:
         permission = await self.get_by_id(id_)
 
-        return await self._repository.update(permission, data)
+        permission = await self._repository.update(permission, data)
+        await self.repository.commit_refresh(permission)
+
+        return permission
 
     async def delete_permission(self, id_: UUID, force: bool = False):
         permission = await self.get_by_id(id_)

@@ -1,8 +1,13 @@
+from src.utils.exceptions.app import (
+    RedisClientUnavailableException as RedisClientUnavailableException,
+)
 from src.utils.exceptions.auth import (
     InvalidPasswordException as InvalidPasswordException,
     InvalidTokenException as InvalidTokenException,
     InvalidTokenTypeException as InvalidTokenTypeException,
     LoginAlreadyUsesException as LoginAlreadyUsesException,
+    PermissionDeniedException as PermissionDeniedException,
+    RoleNotSetException as RoleNotSetException,
     TokenBlockedException as TokenBlockedException,
     TokenExpiredException as TokenExpiredException,
     UserNotFoundException as UserNotFoundException,

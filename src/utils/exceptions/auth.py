@@ -1,9 +1,10 @@
 from typing import Optional
 from uuid import UUID
 
-from src.managers.token.tokens.token_type import TokenType
+from src.auth.enums import SystemPermission, TokenType
 from src.utils.exceptions.base import (
     ConflictException,
+    ForbiddenException,
     NotFoundException,
     UnauthorizedException,
 )
@@ -48,3 +49,15 @@ class TokenBlockedException(UnauthorizedException):
 class InvalidTokenTypeException(UnauthorizedException):
     def __init__(self, value: TokenType, expected: TokenType):
         super().__init__(f"Неверный тип токена {value}, ожидался {expected}")
+
+
+class RoleNotSetException(ForbiddenException):
+    def __init__(self, user_id: UUID):
+        super().__init__(f"У пользователя ({user_id.hex[:8]}) не назначена роль")
+
+
+class PermissionDeniedException(ForbiddenException):
+    def __init__(self, need_perm: SystemPermission):
+        super().__init__(
+            f"Доступ запрещён, необходимо обладать разрешением '{need_perm.value}'"
+        )

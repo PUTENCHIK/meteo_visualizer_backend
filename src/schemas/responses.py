@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class ErrorResponse(BaseModel):
-    details: str
+    detail: str
 
 
 class ResponseModel(BaseModel):

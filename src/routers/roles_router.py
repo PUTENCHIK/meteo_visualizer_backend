@@ -3,7 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
+from src.auth.callable import PermissionRequired as required
+from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
+from src.models import User
 from src.schemas import (
     AddPermissionToRoleSchema,
     CreateRoleSchema,
@@ -29,6 +32,7 @@ roles_router = APIRouter(prefix="/roles", tags=["Роли пользовател
 async def get_roles(
     include_deleted: bool = False,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_READ)),
 ):
     return await service.get_all_with_permissions(include_deleted)
 
@@ -44,6 +48,7 @@ async def get_roles(
 async def create_role(
     data: CreateRoleSchema,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_CREATE)),
 ):
     return await service.create_role(data)
 
@@ -57,6 +62,7 @@ async def create_role(
 async def get_role_with_permissions(
     id_: UUID,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_READ)),
 ):
     return await service.get_role_with_permissions(id_)
 
@@ -73,7 +79,9 @@ async def get_role_with_permissions(
     ),
 )
 async def restore_role(
-    id_: UUID, service: RoleService = Depends(ServiceFactory.get_role_service)
+    id_: UUID,
+    service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_RESTORE)),
 ):
     return await service.restore_role(id_)
 
@@ -93,6 +101,7 @@ async def update_role(
     id_: UUID,
     data: UpdateRoleSchema,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_UPDATE)),
 ):
     return await service.update_role(id_, data)
 
@@ -111,6 +120,7 @@ async def delete_role(
     id_: UUID,
     force: bool = False,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_DELETE)),
 ):
     await service.delete_role(id_, force)
 
@@ -130,6 +140,7 @@ async def add_permission_to_role(
     id_: UUID,
     data: List[AddPermissionToRoleSchema],
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_PERMISSION_CREATE)),
 ):
     return await service.create_roles_permissions(id_, data)
 
@@ -148,5 +159,6 @@ async def delete_permission_from_role(
     id_: UUID,
     data: List[DeletePermissionToRoleSchema],
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(required(p.ROLE_PERMISSION_DELETE)),
 ):
     return await service.delete_roles_permissions(id_, data)

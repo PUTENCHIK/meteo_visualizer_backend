@@ -25,7 +25,7 @@ class UserBaseSchema(NamesSchema, LoginSchema):
     role_id: UUID
 
 
-class SignupSchema(UserBaseSchema, PasswordSchema):
+class SignupSchema(NamesSchema, LoginSchema, PasswordSchema):
     pass
 
 
