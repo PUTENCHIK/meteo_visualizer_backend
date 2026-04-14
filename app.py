@@ -8,6 +8,9 @@ from src.managers import TokenManager
 from src.routers import (
     auth_router,
     complexes_router,
+    mast_configs_router,
+    mast_yards_router,
+    masts_router,
     permission_router,
     roles_router,
     users_router,
@@ -38,6 +41,9 @@ app.include_router(roles_router, prefix=api_prefix)
 app.include_router(permission_router, prefix=api_prefix)
 app.include_router(users_router, prefix=api_prefix)
 app.include_router(complexes_router, prefix=api_prefix)
+app.include_router(masts_router, prefix=api_prefix)
+app.include_router(mast_configs_router, prefix=api_prefix)
+app.include_router(mast_yards_router, prefix=api_prefix)
 
 
 @app.get("/api/status")

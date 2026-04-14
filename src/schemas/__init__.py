@@ -9,6 +9,21 @@ from src.schemas.complexes import (
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
 )
+from src.schemas.mast_configs import (
+    CreateMastConfigSchema as CreateMastConfigSchema,
+    MastConfigSchema as MastConfigSchema,
+    UpdateMastConfigSchema as UpdateMastConfigSchema,
+)
+from src.schemas.mast_yards import (
+    CreateMastYardSchema as CreateMastYardSchema,
+    MastYardSchema as MastYardSchema,
+    UpdateMastYardSchema as UpdateMastYardSchema,
+)
+from src.schemas.masts import (
+    CreateMastSchema as CreateMastSchema,
+    MastSchema as MastSchema,
+    UpdateMastSchema as UpdateMastSchema,
+)
 from src.schemas.permissions import (
     CreatePermissionSchema as CreatePermissionSchema,
     PermissionSchema as PermissionSchema,

@@ -1,8 +1,9 @@
 from decimal import Decimal
-from typing import Optional
+from typing import List, Optional
 from uuid import UUID
 
 from src.schemas.base import AuditableModelSchema, BaseSchema
+from src.schemas.masts import MastSchema
 from src.schemas.users import UserSchema
 
 
@@ -36,3 +37,4 @@ class UpdateComplexSchema(UpdateComplexBaseSchema, PaswordSchema):
 class ComplexSchema(AuditableModelSchema, ComplexBaseSchema):
     creator_id: UUID
     creator: UserSchema
+    masts: List[MastSchema]

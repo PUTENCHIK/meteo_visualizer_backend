@@ -74,4 +74,6 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
     async def delete_complex(self, id_: UUID, force: bool = False):
         complex = await self.get_by_id(id_)
 
+        # TODO: удалять связанные мачты
+
         return await self._delete(complex, force)
