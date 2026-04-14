@@ -4,6 +4,9 @@ from src.repositories.abstractions.auditable_repository import (
 from src.repositories.abstractions.base_repository import (
     BaseRepository as BaseRepository,
 )
+from src.repositories.core.complex_repository import (
+    ComplexRepository as ComplexRepository,
+)
 from src.repositories.core.permission_repository import (
     PermissionRepository as PermissionRepository,
 )

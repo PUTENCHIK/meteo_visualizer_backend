@@ -57,7 +57,11 @@ async def create_role(
     "/{id_}",
     response_model=RoleWithPermissionsSchema,
     status_code=200,
-    responses=get_responses(),
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Роль не найдена"),
+        ]
+    ),
 )
 async def get_role_with_permissions(
     id_: UUID,

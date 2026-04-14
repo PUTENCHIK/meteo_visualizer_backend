@@ -80,6 +80,6 @@ async def delete_user(
     id_: UUID,
     force: bool = False,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(required(p.USER_UPDATE)),
+    user: User = Depends(required(p.USER_DELETE)),
 ):
     return await service.delete_user(id_, force)

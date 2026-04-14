@@ -4,6 +4,11 @@ from src.schemas.auth import (
     SigninSchema as SigninSchema,
     SignupSchema as SignupSchema,
 )
+from src.schemas.complexes import (
+    ComplexSchema as ComplexSchema,
+    CreateComplexSchema as CreateComplexSchema,
+    UpdateComplexSchema as UpdateComplexSchema,
+)
 from src.schemas.permissions import (
     CreatePermissionSchema as CreatePermissionSchema,
     PermissionSchema as PermissionSchema,

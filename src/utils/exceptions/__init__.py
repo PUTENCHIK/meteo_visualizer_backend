@@ -19,6 +19,10 @@ from src.utils.exceptions.base import (
     NotFoundException as NotFoundException,
     UnauthorizedException as UnauthorizedException,
 )
+from src.utils.exceptions.complexes import (
+    ComplexNotDeletedException as ComplexNotDeletedException,
+    ComplexNotFoundException as ComplexNotFoundException,
+)
 from src.utils.exceptions.permissions import (
     PermissionNameAlreadyExistsException as PermissionNameAlreadyExistsException,
     PermissionNotDeletedException as PermissionNotDeletedException,

@@ -18,3 +18,9 @@ class SystemPermission(Enum):
     USER_UPDATE = "user:update"
     USER_RESTORE = "user:restore"
     USER_DELETE = "user:delete"
+
+    COMPLEX_READ = "complex:read"
+    COMPLEX_CREATE = "complex:create"
+    COMPLEX_RESTORE = "complex:restore"
+    COMPLEX_UPDATE = "complex:update"
+    COMPLEX_DELETE = "complex:delete"

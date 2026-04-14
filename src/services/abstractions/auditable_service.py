@@ -2,6 +2,8 @@ from abc import abstractmethod
 from typing import List, TypeVar, override
 from uuid import UUID
 
+from pydantic import BaseModel
+
 from src.models import AuditableModel
 from src.repositories import AuditableRepository
 from src.services.abstractions.base_service import BaseService
@@ -43,6 +45,11 @@ class AuditableService(BaseService[A, R]):
 
     async def _restore(self, entity: A) -> A:
         entity = await self._repository.restore(entity)
+        await self._repository.commit_refresh(entity)
+        return entity
+
+    async def _update(self, entity: A, data: BaseModel) -> A:
+        entity = await self._repository.update(entity, data)
         await self._repository.commit_refresh(entity)
         return entity
 
