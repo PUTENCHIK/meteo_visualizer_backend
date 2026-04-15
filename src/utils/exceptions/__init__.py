@@ -1,9 +1,11 @@
-from src.utils.exceptions.app import (
+from src.utils.exceptions.code.exception_code import ExceptionCode as ExceptionCode
+from src.utils.exceptions.core.app import (
     RedisClientUnavailableException as RedisClientUnavailableException,
 )
-from src.utils.exceptions.auth import (
+from src.utils.exceptions.core.auth import (
+    InvalidAccessTokenException as InvalidAccessTokenException,
     InvalidPasswordException as InvalidPasswordException,
-    InvalidTokenException as InvalidTokenException,
+    InvalidRefreshTokenException as InvalidRefreshTokenException,
     InvalidTokenTypeException as InvalidTokenTypeException,
     LoginAlreadyUsesException as LoginAlreadyUsesException,
     PermissionDeniedException as PermissionDeniedException,
@@ -11,7 +13,7 @@ from src.utils.exceptions.auth import (
     TokenBlockedException as TokenBlockedException,
     TokenExpiredException as TokenExpiredException,
 )
-from src.utils.exceptions.base import (
+from src.utils.exceptions.core.base import (
     AppException as AppException,
     BadRequestException as BadRequestException,
     ConflictException as ConflictException,
@@ -19,28 +21,28 @@ from src.utils.exceptions.base import (
     NotFoundException as NotFoundException,
     UnauthorizedException as UnauthorizedException,
 )
-from src.utils.exceptions.complexes import (
+from src.utils.exceptions.core.complexes import (
     ComplexNotDeletedException as ComplexNotDeletedException,
     ComplexNotFoundException as ComplexNotFoundException,
 )
-from src.utils.exceptions.mast_configs import (
+from src.utils.exceptions.core.mast_configs import (
     MastConfigNotDeletedException as MastConfigNotDeletedException,
     MastConfigNotFoundException as MastConfigNotFoundException,
 )
-from src.utils.exceptions.mast_yards import (
+from src.utils.exceptions.core.mast_yards import (
     InvalidMastYardHeightException as InvalidMastYardHeightException,
     MastYardAlreadyExistsException as MastYardAlreadyExistsException,
     MastYardNotFoundException as MastYardNotFoundException,
 )
-from src.utils.exceptions.masts import (
+from src.utils.exceptions.core.masts import (
     MastNotFoundException as MastNotFoundException,
 )
-from src.utils.exceptions.permissions import (
+from src.utils.exceptions.core.permissions import (
     PermissionNameAlreadyExistsException as PermissionNameAlreadyExistsException,
     PermissionNotDeletedException as PermissionNotDeletedException,
     PermissionNotFoundException as PermissionNotFoundException,
 )
-from src.utils.exceptions.roles import (
+from src.utils.exceptions.core.roles import (
     RoleHasChildrenException as RoleHasChildrenException,
     RoleHasUsersException as RoleHasUsersException,
     RoleNameAlreadyExistsException as RoleNameAlreadyExistsException,
@@ -48,7 +50,7 @@ from src.utils.exceptions.roles import (
     RoleNotFoundException as RoleNotFoundException,
     RoleParentCantBeSameException as RoleParentCantBeSameException,
 )
-from src.utils.exceptions.users import (
+from src.utils.exceptions.core.users import (
     UserNotDeletedException as UserNotDeletedException,
     UserNotFoundException as UserNotFoundException,
 )

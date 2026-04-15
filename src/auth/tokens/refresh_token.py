@@ -5,7 +5,7 @@ import jwt
 from src.auth.enums import TokenType
 from src.auth.tokens.auth_token import AuthToken
 from src.config import config
-from src.utils.exceptions import InvalidTokenException, TokenExpiredException
+from src.utils.exceptions import InvalidAccessTokenException, TokenExpiredException
 
 
 class RefreshToken(AuthToken):
@@ -32,6 +32,6 @@ class RefreshToken(AuthToken):
             )
             return RefreshToken.new(payload, TokenType.REFRESH)
         except jwt.DecodeError:
-            raise InvalidTokenException()
+            raise InvalidAccessTokenException()
         except jwt.ExpiredSignatureError:
             raise TokenExpiredException()

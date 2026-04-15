@@ -7,7 +7,7 @@ import jwt
 from src.auth.enums import TokenType
 from src.auth.tokens.abstract_token import AbstractToken
 from src.config import config
-from src.utils.exceptions import InvalidTokenException, InvalidTokenTypeException
+from src.utils.exceptions import InvalidAccessTokenException, InvalidTokenTypeException
 
 
 class AuthToken(AbstractToken):
@@ -69,4 +69,4 @@ class AuthToken(AbstractToken):
 
             return instance
         except (KeyError, ValueError, TypeError):
-            raise InvalidTokenException()
+            raise InvalidAccessTokenException()

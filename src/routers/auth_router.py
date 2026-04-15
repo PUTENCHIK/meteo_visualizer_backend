@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends
+from typing import Optional
+
+from fastapi import APIRouter, Cookie, Depends, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.factories import ServiceFactory
 from src.schemas import (
     AuthTokensSchema,
-    RefreshTokenSchema,
     ResponseModel,
     SigninSchema,
     SignupSchema,
@@ -29,11 +30,12 @@ auth_router = APIRouter(prefix="/auth", tags=["Авторизация"])
     ),
 )
 async def signin(
+    response: Response,
     form_data: OAuth2PasswordRequestForm = Depends(),
     service: AuthService = Depends(ServiceFactory.get_auth_service),
 ):
     data = SigninSchema(login=form_data.username, password=form_data.password)
-    return await service.signin(data)
+    return await service.signin(data, response)
 
 
 @auth_router.post(
@@ -66,7 +68,8 @@ async def signup(
     ),
 )
 async def refresh_tokens(
-    data: RefreshTokenSchema,
+    response: Response,
+    refresh_token: Optional[str] = Cookie(None),
     service: AuthService = Depends(ServiceFactory.get_auth_service),
 ):
-    return await service.refresh(data)
+    return await service.refresh(refresh_token, response)

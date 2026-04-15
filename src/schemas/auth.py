@@ -10,11 +10,7 @@ class SignupSchema(NamesSchema, LoginSchema, PasswordSchema):
     pass
 
 
-class RefreshTokenSchema(BaseSchema):
-    refresh_token: str
-
-
-class AuthTokensSchema(RefreshTokenSchema):
+class AuthTokensSchema(BaseSchema):
     access_token: str
     token_type: str = "bearer"
 

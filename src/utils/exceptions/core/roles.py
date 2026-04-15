@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.utils.exceptions.base import (
+from src.utils.exceptions.core.base import (
     BadRequestException,
     ConflictException,
     NotFoundException,

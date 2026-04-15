@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from src.utils.exceptions.base import BadRequestException, NotFoundException
+from src.utils.exceptions.core.base import BadRequestException, NotFoundException
 
 
 class UserNotFoundException(NotFoundException):

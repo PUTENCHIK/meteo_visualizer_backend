@@ -1,8 +1,12 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.exceptions import RequestValidationError
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
+from starlette.exceptions import HTTPException
 
+from src.config import config
 from src.db import async_session_maker
 from src.managers import TokenManager
 from src.routers import (
@@ -15,8 +19,10 @@ from src.routers import (
     roles_router,
     users_router,
 )
+from src.utils import create_error_response
 from src.utils.exceptions import (
     AppException,
+    ExceptionCode,
 )
 from src.utils.initial_data import InitialDataManager
 
@@ -45,6 +51,19 @@ app.include_router(masts_router, prefix=api_prefix)
 app.include_router(mast_configs_router, prefix=api_prefix)
 app.include_router(mast_yards_router, prefix=api_prefix)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.allow_origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH"],
+    allow_headers=[
+        "Content-Type",
+        "Set-Cookie",
+        "Authorization",
+        "Access-Control-Allow-Origin",
+    ],
+)
+
 
 @app.get("/api/status")
 def status():
@@ -53,9 +72,19 @@ def status():
 
 
 @app.exception_handler(AppException)
-def handle_exception(request: Request, ex: AppException):
-    return JSONResponse(
-        status_code=ex.status_code,
-        content={"error": ex.__class__.__name__, "error_description": str(ex)},
-        headers={"WWW-Authenticate": "Bearer"},
+def app_exception_handler(request: Request, ex: AppException):
+    return create_error_response(
+        status_code=ex.status_code, code=ex.code, message=str(ex)
     )
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return create_error_response(exc.status_code, ExceptionCode.HTTP_ERROR, exc.detail)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    errors = exc.errors()
+    msg = f"Ошибка валидации: {errors[0]['msg']} (поле: {errors[0]['loc'][-1]})"
+    return create_error_response(422, ExceptionCode.VALIDATION, msg)

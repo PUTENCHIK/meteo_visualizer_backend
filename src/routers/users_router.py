@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends
 
 from src.auth.callable import PermissionRequired as required
 from src.auth.enums import SystemPermission as p
-from src.factories import ServiceFactory
+from src.factories import AuthFactory, ServiceFactory
 from src.models import User
-from src.schemas import ResponseModel, UpdateUserSchema, UserSchema
+from src.schemas import ActiveUserSchema, ResponseModel, UpdateUserSchema, UserSchema
 from src.services import UserService
 from src.utils import get_responses
 
@@ -26,6 +26,18 @@ async def get_users(
     user: User = Depends(required(p.USER_READ)),
 ):
     return await service.get_all(include_deleted)
+
+
+@users_router.get(
+    "/me",
+    response_model=ActiveUserSchema,
+    status_code=200,
+    responses=get_responses(),
+)
+async def get_active_user(
+    user: User = Depends(AuthFactory.get_current_user),
+):
+    return user
 
 
 @users_router.post(

@@ -3,7 +3,7 @@ from typing import Optional, override
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 
-from src.models import Role, User
+from src.models import Complex, Role, User
 from src.repositories.abstractions.auditable_repository import AuditableRepository
 
 
@@ -21,7 +21,10 @@ class UserRepository(AuditableRepository[User]):
         statement = super()._get_all_query(include_deleted)
         return statement.options(
             selectinload(User.role).selectinload(Role.parent),
+            selectinload(User.role).selectinload(Role.children),
             selectinload(User.role).selectinload(Role.permissions),
+            selectinload(User.complexes).selectinload(Complex.creator),
+            selectinload(User.created_complexes).selectinload(Complex.creator),
         )
 
     async def get_by_login(self, login: str) -> Optional[User]:

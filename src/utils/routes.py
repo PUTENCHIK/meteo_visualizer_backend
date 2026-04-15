@@ -1,6 +1,9 @@
 from typing import Any, Dict, List
 
+from fastapi.responses import JSONResponse
+
 from src.schemas import ErrorResponse, ResponseModel
+from src.utils.exceptions import ExceptionCode
 
 DEFAULT_RESPONSES: List[ResponseModel] = [
     ResponseModel(status_code=500, description="Внутренняя ошибка сервера"),
@@ -25,3 +28,16 @@ def get_responses(
         resp.status_code: {"model": ErrorResponse, "description": resp.description}
         for resp in result
     }
+
+
+def create_error_response(status_code: int, code: ExceptionCode, message: str):
+    return JSONResponse(
+        status_code=status_code,
+        content={
+            "detail": {
+                "code": code.name,
+                "message": message,
+            }
+        },
+        headers={"WWW-Authenticate": "Bearer"},
+    )

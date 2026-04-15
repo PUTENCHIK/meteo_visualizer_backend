@@ -1,6 +1,5 @@
 from src.schemas.auth import (
     AuthTokensSchema as AuthTokensSchema,
-    RefreshTokenSchema as RefreshTokenSchema,
     SigninSchema as SigninSchema,
     SignupSchema as SignupSchema,
 )
@@ -49,6 +48,7 @@ from src.schemas.roles_permissions import (
     RolePermissionSchema as RolePermissionSchema,
 )
 from src.schemas.users import (
+    ActiveUserSchema as ActiveUserSchema,
     UpdateUserSchema as UpdateUserSchema,
     UserSchema as UserSchema,
 )

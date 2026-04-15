@@ -1,4 +1,4 @@
-from src.utils.exceptions.base import AppException
+from src.utils.exceptions.core.base import AppException
 
 
 class RedisClientUnavailableException(AppException):

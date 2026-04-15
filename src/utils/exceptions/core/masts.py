@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.utils.exceptions.base import NotFoundException
+from src.utils.exceptions.core.base import NotFoundException
 
 
 class MastNotFoundException(NotFoundException):
