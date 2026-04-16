@@ -9,7 +9,6 @@ from src.schemas import (
     ResponseModel,
     SigninSchema,
     SignupSchema,
-    UserSchema,
 )
 from src.services import AuthService
 from src.utils import get_responses
@@ -40,7 +39,7 @@ async def signin(
 
 @auth_router.post(
     "/signup",
-    response_model=UserSchema,
+    response_model=AuthTokensSchema,
     status_code=200,
     responses=get_responses(
         [
@@ -50,9 +49,11 @@ async def signin(
     ),
 )
 async def signup(
-    data: SignupSchema, service: AuthService = Depends(ServiceFactory.get_auth_service)
+    response: Response,
+    data: SignupSchema,
+    service: AuthService = Depends(ServiceFactory.get_auth_service),
 ):
-    return await service.signup(data)
+    return await service.signup(data, response)
 
 
 @auth_router.post(
@@ -73,3 +74,18 @@ async def refresh_tokens(
     service: AuthService = Depends(ServiceFactory.get_auth_service),
 ):
     return await service.refresh(refresh_token, response)
+
+
+@auth_router.post(
+    "/logout",
+    status_code=204,
+    responses=get_responses(
+        include_auth=False,
+    ),
+)
+async def logout(
+    response: Response,
+    refresh_token: Optional[str] = Cookie(None),
+    service: AuthService = Depends(ServiceFactory.get_auth_service),
+):
+    await service.logout(refresh_token, response)

@@ -55,3 +55,4 @@ from src.schemas.users import (
 
 RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()
+ComplexSchema.model_rebuild()

@@ -50,6 +50,9 @@ class TokenManager(metaclass=SingletonMetaclass):
     async def get_refresh_token(self, user_id: UUID) -> Optional[str]:
         return await self.client.get(self.__refresh_token(user_id))
 
+    async def delete_refresh_token(self, user_id: UUID):
+        await self.client.delete(self.__refresh_token(user_id))
+
     async def block_token(self, token: AuthToken):
         await self.client.setex(
             self.__blocked_token(token.jti), token.exp_seconds, "true"

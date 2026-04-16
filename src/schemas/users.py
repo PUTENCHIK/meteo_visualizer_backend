@@ -2,7 +2,7 @@ from typing import List, Optional
 from uuid import UUID
 
 from src.schemas.base import AuditableModelSchema, BaseSchema
-from src.schemas.complexes import ComplexBaseSchema
+from src.schemas.complexes import ComplexSchema
 from src.schemas.roles import RoleSchema, RoleWithPermissionsSchema
 
 
@@ -41,5 +41,5 @@ class UserSchema(AuditableModelSchema, UserBaseSchema):
 
 class ActiveUserSchema(UserSchema):
     role: RoleWithPermissionsSchema
-    complexes: List["ComplexBaseSchema"]
-    created_complexes: List["ComplexBaseSchema"]
+    complexes: List[ComplexSchema]
+    created_complexes: List[ComplexSchema]

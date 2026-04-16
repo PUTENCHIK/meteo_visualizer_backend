@@ -76,7 +76,7 @@ class AuthService:
 
         return AuthTokensSchema(access_token=access.jwt)
 
-    async def signup(self, data: SignupSchema) -> User:
+    async def signup(self, data: SignupSchema, response: Response) -> AuthTokensSchema:
         user = await self.user_repo.get_by_login(data.login)
         if user:
             raise LoginAlreadyUsesException(data.login)
@@ -91,7 +91,10 @@ class AuthService:
         db_user = await self.user_repo.add(new_user)
         await self.user_repo.commit()
 
-        return await self.user_repo.get_by_id(db_user.id)
+        access, refresh = self.token_manager.generate_tokens(db_user.id)
+        AuthService.set_response_cookie(response, refresh)
+
+        return AuthTokensSchema(access_token=access.jwt)
 
     async def refresh(
         self, refresh_jwt: Optional[str], response: Response
@@ -130,3 +133,18 @@ class AuthService:
             raise PermissionDeniedException(permission)
 
         return has_perm
+
+    async def logout(self, refresh_jwt: Optional[str], response: Response):
+        try:
+            if refresh_jwt:
+                refresh_token = RefreshToken.decode(refresh_jwt)
+                await self.token_manager.delete_refresh_token(refresh_token.sub)
+        except Exception:
+            pass
+
+        response.delete_cookie(
+            key="refresh_token",
+            httponly=True,
+            samesite="lax",
+            secure=True,
+        )
