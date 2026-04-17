@@ -5,8 +5,12 @@ from src.schemas.auth import (
 )
 from src.schemas.complexes import (
     ComplexSchema as ComplexSchema,
+    ComplexWithMastsSchema as ComplexWithMastsSchema,
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
+)
+from src.schemas.complexes_users import (
+    ComplexUserSchema as ComplexUserSchema,
 )
 from src.schemas.mast_configs import (
     CreateMastConfigSchema as CreateMastConfigSchema,
@@ -56,3 +60,5 @@ from src.schemas.users import (
 RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()
 ComplexSchema.model_rebuild()
+ComplexWithMastsSchema.model_rebuild()
+ActiveUserSchema.model_rebuild()

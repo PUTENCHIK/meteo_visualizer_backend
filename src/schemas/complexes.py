@@ -25,18 +25,17 @@ class CreateComplexSchema(ComplexBaseSchema, PaswordSchema):
     pass
 
 
-class UpdateComplexBaseSchema(ComplexBaseSchema):
+class UpdateComplexSchema(PaswordSchema):
     name: Optional[str] = None
     is_private: Optional[bool] = None
     latitude: Optional[Decimal] = None
     longitude: Optional[Decimal] = None
 
 
-class UpdateComplexSchema(UpdateComplexBaseSchema, PaswordSchema):
-    pass
-
-
 class ComplexSchema(AuditableModelSchema, ComplexBaseSchema):
     creator_id: UUID
     creator: "UserSchema"
+
+
+class ComplexWithMastsSchema(ComplexSchema):
     masts: List[MastSchema]

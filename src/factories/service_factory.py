@@ -4,6 +4,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db import get_session
 from src.repositories import (
     ComplexRepository,
+    ComplexUserRepository,
     MastConfigRepository,
     MastRepository,
     MastYardRepository,
@@ -47,7 +48,11 @@ class ServiceFactory:
 
     @staticmethod
     async def get_user_service(session: AsyncSession = Depends(get_session)):
-        return UserService(UserRepository(session), RoleRepository(session))
+        return UserService(
+            UserRepository(session),
+            RoleRepository(session),
+            ComplexUserRepository(session),
+        )
 
     @staticmethod
     async def get_complex_service(session: AsyncSession = Depends(get_session)):

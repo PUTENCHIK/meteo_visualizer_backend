@@ -7,6 +7,9 @@ from src.repositories.abstractions.base_repository import (
 from src.repositories.core.complex_repository import (
     ComplexRepository as ComplexRepository,
 )
+from src.repositories.core.complex_user_repository import (
+    ComplexUserRepository as ComplexUserRepository,
+)
 from src.repositories.core.mast_config_repository import (
     MastConfigRepository as MastConfigRepository,
 )

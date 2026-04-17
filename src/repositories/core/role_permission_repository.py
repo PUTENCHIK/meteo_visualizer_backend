@@ -29,13 +29,9 @@ class RolePermissionRepository(ManyToManyRepository[RolePermission]):
     async def get_by_ids(
         self, role_id: UUID, permission_id: UUID
     ) -> Optional[RolePermission]:
-        statement = (
-            super()
-            ._get_all_query()
-            .where(
-                RolePermission.role_id == role_id,
-                RolePermission.permission_id == permission_id,
-            )
+        statement = self._get_all_query().where(
+            RolePermission.role_id == role_id,
+            RolePermission.permission_id == permission_id,
         )
         result = await self.session.exec(statement)
         return result.one_or_none()

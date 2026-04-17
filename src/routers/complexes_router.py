@@ -8,7 +8,7 @@ from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
 from src.schemas import (
-    ComplexSchema,
+    ComplexWithMastsSchema,
     CreateComplexSchema,
     ResponseModel,
     UpdateComplexSchema,
@@ -21,7 +21,7 @@ complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 
 @complexes_router.get(
     "/",
-    response_model=List[ComplexSchema],
+    response_model=List[ComplexWithMastsSchema],
     status_code=200,
     responses=get_responses(),
 )
@@ -35,7 +35,7 @@ async def get_complexes(
 
 @complexes_router.post(
     "/",
-    response_model=ComplexSchema,
+    response_model=ComplexWithMastsSchema,
     status_code=201,
     responses=get_responses(),
 )
@@ -67,7 +67,7 @@ async def restore_complex(
 
 @complexes_router.patch(
     "/{id_}",
-    response_model=ComplexSchema,
+    response_model=ComplexWithMastsSchema,
     status_code=200,
     responses=get_responses(
         [

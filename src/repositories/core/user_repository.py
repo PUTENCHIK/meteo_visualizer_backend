@@ -35,7 +35,7 @@ class UserRepository(AuditableRepository[User]):
             .selectinload(MastConfig.yards),
             with_loader_criteria(
                 AuditableModel,
-                lambda cls: getattr(cls, "deleted_at", None) is None,
+                lambda cls: getattr(cls, "deleted_at", None) == None,
                 include_aliases=True,
             ),
         )

@@ -16,6 +16,7 @@ class ComplexUser(ManyToManyModel, table=True):
     complex_id: UUID = Field(foreign_key="complexes.id", primary_key=True)
     user_id: UUID = Field(foreign_key="users.id", primary_key=True)
     creator_id: Optional[UUID] = Field(foreign_key="users.id", default=None)
+    has_access: bool = Field(default=False)
 
     complex: "Complex" = Relationship()
     user: "User" = Relationship(

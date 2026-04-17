@@ -14,12 +14,12 @@ if TYPE_CHECKING:
 class Measure(AuditableModel, table=True):
     __tablename__ = "measures"
 
-    user_id: Optional[UUID] = Field(foreign_key="users.id", nullable=True)
+    creator_id: Optional[UUID] = Field(foreign_key="users.id", nullable=True)
     name: str = Field(nullable=False)
     min: int = Field()
     max: int = Field()
     units: Optional[str] = Field(nullable=True, default=None)
 
-    user: Optional["User"] = Relationship(back_populates="measures")
+    creator: Optional["User"] = Relationship(back_populates="created_measures")
     aliases: List["MeasureAlias"] = Relationship(back_populates="measure")
     colors: List["MeasureColor"] = Relationship(back_populates="measure")

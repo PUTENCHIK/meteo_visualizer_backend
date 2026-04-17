@@ -7,7 +7,13 @@ from src.auth.callable import PermissionRequired as required
 from src.auth.enums import SystemPermission as p
 from src.factories import AuthFactory, ServiceFactory
 from src.models import User
-from src.schemas import ActiveUserSchema, ResponseModel, UpdateUserSchema, UserSchema
+from src.schemas import (
+    ActiveUserSchema,
+    ComplexUserSchema,
+    ResponseModel,
+    UpdateUserSchema,
+    UserSchema,
+)
 from src.services import UserService
 from src.utils import get_responses
 
@@ -32,12 +38,33 @@ async def get_users(
     "/me",
     response_model=ActiveUserSchema,
     status_code=200,
-    responses=get_responses(),
+    responses=get_responses(
+        [
+            ResponseModel(status_code=401, description="Токен доступа заблокирован"),
+        ]
+    ),
 )
 async def get_active_user(
     user: User = Depends(AuthFactory.get_current_user),
 ):
     return user
+
+
+@users_router.get(
+    "/me/complexes",
+    response_model=List[ComplexUserSchema],
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=401, description="Токен доступа заблокирован"),
+        ]
+    ),
+)
+async def get_active_user_complexes(
+    service: UserService = Depends(ServiceFactory.get_user_service),
+    user: User = Depends(AuthFactory.get_current_user),
+):
+    return await service.get_user_complexes(user)
 
 
 @users_router.post(
