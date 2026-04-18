@@ -1,5 +1,6 @@
 from typing import List, override
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import Role, RolePermission
 from src.repositories import (
@@ -11,7 +12,7 @@ from src.schemas import (
     AddPermissionToRoleSchema,
     CreateRolePermissionSchema,
     CreateRoleSchema,
-    DeletePermissionToRoleSchema,
+    DeletePermissionFromRoleSchema,
     UpdateRoleSchema,
 )
 from src.services.abstractions.auditable_service import AuditableService
@@ -31,33 +32,35 @@ class RoleService(AuditableService[Role, RoleRepository]):
     Сервис ролей пользователей
     """
 
-    __perm_repository: PermissionRepository
-    __role_perm_repository: RolePermissionRepository
+    _permission_repo: PermissionRepository
+    _role_permission_repo: RolePermissionRepository
 
     @property
-    def role_perm_repository(self) -> RolePermissionRepository:
-        return self.__role_perm_repository
+    def permission_repo(self) -> PermissionRepository:
+        return self._permission_repo
+
+    @property
+    def role_permission_repo(self) -> RolePermissionRepository:
+        return self._role_permission_repo
 
     def __init__(
         self,
-        repository: RoleRepository,
-        p_repo: PermissionRepository,
-        rp_repo: RolePermissionRepository,
+        session: AsyncSession
     ):
-        super().__init__(repository)
-        self.__perm_repository = p_repo
-        self.__role_perm_repository = rp_repo
+        super().__init__(RoleRepository(session))
+        self._permission_repo = PermissionRepository(session)
+        self._role_permission_repo = RolePermissionRepository(session)
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> Role:
-        role = await self._repository.get_by_id(id_, include_deleted)
+        role = await self.repository.get_by_id(id_, include_deleted)
         if not role:
             raise RoleNotFoundException(id_)
         return role
 
     async def get_role_with_permissions(self, id_: UUID) -> Role:
         role = await self.get_by_id(id_)
-        permissions = await self._repository.get_role_permissions(role.id)
+        permissions = await self.repository.get_role_permissions(role.id)
         role.permissions = permissions
 
         return role
@@ -65,8 +68,8 @@ class RoleService(AuditableService[Role, RoleRepository]):
     async def get_all_with_permissions(
         self, include_deleted: bool = False
     ) -> List[Role]:
-        roles = await self._repository.get_all(include_deleted)
-        perms_map = await self._repository.get_all_with_permissions(include_deleted)
+        roles = await self.repository.get_all(include_deleted)
+        perms_map = await self.repository.get_all_with_permissions(include_deleted)
 
         for role in roles:
             role.permissions = perms_map.get(role.id, [])
@@ -74,7 +77,7 @@ class RoleService(AuditableService[Role, RoleRepository]):
         return roles
 
     async def create_role(self, data: CreateRoleSchema) -> Role:
-        role = await self._repository.get_by_name(data.name)
+        role = await self.repository.get_by_name(data.name)
         if role:
             raise RoleNameAlreadyExistsException(data.name, role.deleted_at is not None)
 
@@ -91,17 +94,17 @@ class RoleService(AuditableService[Role, RoleRepository]):
         return role
 
     async def generate_role(self, data: CreateRoleSchema) -> Role:
-        role = await self._repository.get_by_id(data.id, include_deleted=True)
+        role = await self.repository.get_by_id(data.id, include_deleted=True)
 
         if role:
             if role.deleted_at is not None:
-                await self._repository.restore(role)
+                await self.repository.restore(role)
             return role
 
-        by_name = await self._repository.get_by_name(data.name, include_deleted=True)
+        by_name = await self.repository.get_by_name(data.name, include_deleted=True)
         if by_name:
             if by_name.deleted_at is not None:
-                await self._repository.restore(role)
+                await self.repository.restore(role)
             return role
 
         new_role = Role(
@@ -109,7 +112,7 @@ class RoleService(AuditableService[Role, RoleRepository]):
             name=data.name,
             parent_id=data.parent_id,
         )
-        await self._repository.add(new_role)
+        await self.repository.add(new_role)
         return new_role
 
     async def generate_role_permission(
@@ -117,15 +120,15 @@ class RoleService(AuditableService[Role, RoleRepository]):
     ) -> RolePermission:
         if check_role_exists:
             await self.get_by_id(data.role_id)
-        permission = await self.__perm_repository.get_by_name(data.permission.value)
+        permission = await self.permission_repo.get_by_name(data.permission.value)
         if not permission:
             raise PermissionNotFoundException(name=data.permission.value)
-        link = await self.__role_perm_repository.get_by_ids(data.role_id, permission.id)
+        link = await self.role_permission_repo.get_by_ids(data.role_id, permission.id)
         if not link:
             link = RolePermission(
                 role_id=data.role_id, permission_id=permission.id, creator_id=None
             )
-            await self.__role_perm_repository.add(link)
+            await self.role_permission_repo.add(link)
 
         return link
 
@@ -141,25 +144,25 @@ class RoleService(AuditableService[Role, RoleRepository]):
                 )
             )
 
-        await self.__role_perm_repository.commit()
+        await self.role_permission_repo.commit()
 
-        return await self.role_perm_repository.get_by_role(role_id)
+        return await self.role_permission_repo.get_by_role(role_id)
 
     async def delete_roles_permissions(
-        self, role_id: UUID, data: List[DeletePermissionToRoleSchema]
+        self, role_id: UUID, data: List[DeletePermissionFromRoleSchema]
     ):
         await self.get_by_id(role_id)
         for link_data in data:
-            permission = await self.__perm_repository.get_by_name(
+            permission = await self.permission_repo.get_by_name(
                 link_data.permission.value
             )
             if not permission:
                 raise PermissionNotFoundException(name=link_data.permission.value)
-            link = await self.__role_perm_repository.get_by_ids(role_id, permission.id)
+            link = await self.role_permission_repo.get_by_ids(role_id, permission.id)
             if link:
-                await self.__role_perm_repository.delete(link)
+                await self.role_permission_repo.delete(link)
 
-        await self.__role_perm_repository.commit()
+        await self.role_permission_repo.commit()
 
     async def restore_role(self, id_: UUID) -> Role:
         role = await self.get_by_id(id_, include_deleted=True)
@@ -176,14 +179,14 @@ class RoleService(AuditableService[Role, RoleRepository]):
         role = await self.get_by_id(id_)
 
         if data.name is not None:
-            by_name = await self._repository.get_by_name(data.name)
+            by_name = await self.repository.get_by_name(data.name)
             if by_name:
                 raise RoleNameAlreadyExistsException(data.name)
 
         if data.parent_id == id_:
             raise RoleParentCantBeSameException()
 
-        role = await self._repository.update(role, data)
+        role = await self.repository.update(role, data)
         await self.repository.commit_refresh(role)
 
         return role

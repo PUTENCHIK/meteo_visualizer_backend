@@ -1,5 +1,6 @@
 from typing import List, override
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import ComplexUser, User
 from src.repositories import ComplexUserRepository, RoleRepository, UserRepository
@@ -17,30 +18,28 @@ class UserService(AuditableService[User, UserRepository]):
     Сервис пользователей
     """
 
-    __role_repo: RoleRepository
-    __comp_user_repo: ComplexUserRepository
+    _role_repo: RoleRepository
+    _comp_user_repo: ComplexUserRepository
 
     @property
     def role_repo(self) -> RoleRepository:
-        return self.__role_repo
+        return self._role_repo
 
     @property
     def comp_user_repo(self) -> ComplexUserRepository:
-        return self.__comp_user_repo
+        return self._comp_user_repo
 
     def __init__(
         self,
-        repository: UserRepository,
-        role_repo: RoleRepository,
-        comp_user_repo: ComplexUserRepository,
+        session: AsyncSession
     ):
-        super().__init__(repository)
-        self.__role_repo = role_repo
-        self.__comp_user_repo = comp_user_repo
+        super().__init__(UserRepository(session))
+        self._role_repo = RoleRepository(session)
+        self._comp_user_repo = ComplexUserRepository(session)
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> User:
-        user = await self._repository.get_by_id(id_, include_deleted)
+        user = await self.repository.get_by_id(id_, include_deleted)
         if not user:
             raise UserNotFoundException(id_)
         return user

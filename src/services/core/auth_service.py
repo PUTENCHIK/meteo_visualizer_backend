@@ -1,5 +1,6 @@
 from typing import Optional
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from fastapi import Response
 
@@ -26,30 +27,30 @@ class AuthService:
     Сервис авторизации
     """
 
-    __user_repo: UserRepository
-    __role_repo: RoleRepository
-    __token_manager: TokenManager = TokenManager()
-    __password_manager: PasswordManager = PasswordManager()
+    _user_repo: UserRepository
+    _role_repo: RoleRepository
+    _token_manager: TokenManager = TokenManager()
+    _password_manager: PasswordManager = PasswordManager()
 
     @property
     def user_repo(self) -> UserRepository:
-        return self.__user_repo
+        return self._user_repo
 
     @property
     def role_repo(self) -> RoleRepository:
-        return self.__role_repo
+        return self._role_repo
 
     @property
     def token_manager(self) -> TokenManager:
-        return self.__token_manager
+        return self._token_manager
 
     @property
     def password_manager(self) -> PasswordManager:
-        return self.__password_manager
+        return self._password_manager
 
-    def __init__(self, user_repo: UserRepository, role_repo: RoleRepository):
-        self.__user_repo = user_repo
-        self.__role_repo = role_repo
+    def __init__(self, session: AsyncSession):
+        self._user_repo = UserRepository(session)
+        self._role_repo = RoleRepository(session)
 
     @staticmethod
     def set_response_cookie(response: Response, refresh_token: RefreshToken):

@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import MastYard
 from src.repositories import MastConfigRepository, MastYardRepository
@@ -18,17 +19,17 @@ class MastYardService(AuditableService[MastYard, MastYardRepository]):
     Сервис рей мачт
     """
 
-    __config_repo: MastConfigRepository
+    _config_repo: MastConfigRepository
 
     @property
     def config_repo(self) -> MastConfigRepository:
-        return self.__config_repo
+        return self._config_repo
 
     def __init__(
-        self, repository: MastYardRepository, config_repo: MastConfigRepository
+        self, session: AsyncSession
     ):
-        super().__init__(repository)
-        self.__config_repo = config_repo
+        super().__init__(MastYardRepository(session))
+        self._config_repo = MastConfigRepository(session)
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> MastYard:

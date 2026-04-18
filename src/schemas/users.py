@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class NamesSchema(BaseSchema):
     lastname: str
     firstname: str
-    secondname: str
+    secondname: Optional[str] = None
 
 
 class LoginSchema(BaseSchema):
@@ -33,7 +33,6 @@ class UserBaseSchema(NamesSchema, LoginSchema, RoleIdSchema):
 class UpdateUserSchema(NamesSchema, RoleIdSchema):
     lastname: Optional[str] = None
     firstname: Optional[str] = None
-    secondname: Optional[str] = None
     role_id: Optional[UUID] = None
 
 

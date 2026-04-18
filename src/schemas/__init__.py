@@ -48,7 +48,7 @@ from src.schemas.roles import (
 from src.schemas.roles_permissions import (
     AddPermissionToRoleSchema as AddPermissionToRoleSchema,
     CreateRolePermissionSchema as CreateRolePermissionSchema,
-    DeletePermissionToRoleSchema as DeletePermissionToRoleSchema,
+    DeletePermissionFromRoleSchema as DeletePermissionFromRoleSchema,
     RolePermissionSchema as RolePermissionSchema,
 )
 from src.schemas.users import (

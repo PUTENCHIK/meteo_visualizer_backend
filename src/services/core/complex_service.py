@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.managers import PasswordManager
 from src.models import Complex, User
@@ -17,14 +18,14 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
     Сервис комплексов
     """
 
-    __password_manager: PasswordManager = PasswordManager()
+    _password_manager: PasswordManager = PasswordManager()
 
     @property
     def password_manager(self) -> PasswordManager:
-        return self.__password_manager
+        return self._password_manager
 
-    def __init__(self, repository: ComplexRepository):
-        super().__init__(repository)
+    def __init__(self, session: AsyncSession):
+        super().__init__(ComplexRepository(session))
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> Complex:

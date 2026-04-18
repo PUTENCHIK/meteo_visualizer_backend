@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import Permission
 from src.repositories import PermissionRepository
@@ -17,18 +18,18 @@ class PermissionService(AuditableService[Permission, PermissionRepository]):
     Сервис разрешений для ролей пользователей
     """
 
-    def __init__(self, repository: PermissionRepository):
-        super().__init__(repository)
+    def __init__(self, session: AsyncSession):
+        super().__init__(PermissionRepository(session))
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> Permission:
-        permission = await self._repository.get_by_id(id_, include_deleted)
+        permission = await self.repository.get_by_id(id_, include_deleted)
         if not permission:
             raise PermissionNotFoundException(id_)
         return permission
 
     async def create_permission(self, data: CreatePermissionSchema) -> Permission:
-        permission = await self._repository.get_by_name(data.name, include_deleted=True)
+        permission = await self.repository.get_by_name(data.name, include_deleted=True)
         if permission:
             if permission.deleted_at is None:
                 raise PermissionNameAlreadyExistsException(data.name)
@@ -55,7 +56,7 @@ class PermissionService(AuditableService[Permission, PermissionRepository]):
     ) -> Permission:
         permission = await self.get_by_id(id_)
 
-        permission = await self._repository.update(permission, data)
+        permission = await self.repository.update(permission, data)
         await self.repository.commit_refresh(permission)
 
         return permission

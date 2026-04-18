@@ -12,7 +12,7 @@ class AddPermissionToRoleSchema(BaseSchema):
     permission: SystemPermission
 
 
-class DeletePermissionToRoleSchema(AddPermissionToRoleSchema):
+class DeletePermissionFromRoleSchema(AddPermissionToRoleSchema):
     pass
 
 

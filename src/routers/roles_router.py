@@ -10,7 +10,7 @@ from src.models import User
 from src.schemas import (
     AddPermissionToRoleSchema,
     CreateRoleSchema,
-    DeletePermissionToRoleSchema,
+    DeletePermissionFromRoleSchema,
     ResponseModel,
     RolePermissionSchema,
     RoleSchema,
@@ -161,7 +161,7 @@ async def add_permission_to_role(
 )
 async def delete_permission_from_role(
     id_: UUID,
-    data: List[DeletePermissionToRoleSchema],
+    data: List[DeletePermissionFromRoleSchema],
     service: RoleService = Depends(ServiceFactory.get_role_service),
     user: User = Depends(required(p.ROLE_PERMISSION_DELETE)),
 ):
