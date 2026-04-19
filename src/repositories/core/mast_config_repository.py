@@ -19,6 +19,6 @@ class MastConfigRepository(AuditableRepository[MastConfig]):
     def _get_all_query(self, include_deleted: bool = False):
         statement = super()._get_all_query(include_deleted)
         return statement.options(
-            selectinload(MastConfig.yards.and_(MastYard.deleted_at is None)),
-            selectinload(MastConfig.masts.and_(Mast.deleted_at is None)),
+            selectinload(MastConfig.yards.and_(MastYard.deleted_at.is_(None))),
+            selectinload(MastConfig.masts.and_(Mast.deleted_at.is_(None))),
         )

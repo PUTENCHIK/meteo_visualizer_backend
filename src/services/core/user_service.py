@@ -1,5 +1,6 @@
 from typing import List, override
 from uuid import UUID
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import ComplexUser, User
@@ -29,10 +30,7 @@ class UserService(AuditableService[User, UserRepository]):
     def comp_user_repo(self) -> ComplexUserRepository:
         return self._comp_user_repo
 
-    def __init__(
-        self,
-        session: AsyncSession
-    ):
+    def __init__(self, session: AsyncSession):
         super().__init__(UserRepository(session))
         self._role_repo = RoleRepository(session)
         self._comp_user_repo = ComplexUserRepository(session)

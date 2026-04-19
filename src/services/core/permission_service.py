@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import Permission

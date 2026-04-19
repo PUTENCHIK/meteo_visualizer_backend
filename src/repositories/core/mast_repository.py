@@ -20,7 +20,7 @@ class MastRepository(AuditableRepository[Mast]):
         statement = super()._get_all_query(include_deleted)
         return statement.options(
             selectinload(Mast.config).selectinload(
-                MastConfig.yards.and_(MastYard.deleted_at is None)
+                MastConfig.yards.and_(MastYard.deleted_at.is_(None))
             ),
             selectinload(Mast.complex),
         )

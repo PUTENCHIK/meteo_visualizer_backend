@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.managers import PasswordManager
@@ -46,8 +47,9 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
             password_hash=password_hash,
             creator_id=user.id,
         )
+        new_complex = await self._create(new_complex)
 
-        return await self._create(new_complex)
+        return await self.get_by_id(new_complex.id)
 
     async def restore_complex(self, id_: UUID) -> Complex:
         complex = await self.get_by_id(id_, include_deleted=True)

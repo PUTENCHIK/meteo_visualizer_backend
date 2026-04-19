@@ -25,7 +25,7 @@ class CreateComplexSchema(ComplexBaseSchema, PaswordSchema):
     pass
 
 
-class UpdateComplexSchema(PaswordSchema):
+class UpdateComplexSchema(ComplexBaseSchema, PaswordSchema):
     name: Optional[str] = None
     is_private: Optional[bool] = None
     latitude: Optional[Decimal] = None

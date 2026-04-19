@@ -1,5 +1,6 @@
 from typing import List, override
 from uuid import UUID
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import Role, RolePermission
@@ -43,10 +44,7 @@ class RoleService(AuditableService[Role, RoleRepository]):
     def role_permission_repo(self) -> RolePermissionRepository:
         return self._role_permission_repo
 
-    def __init__(
-        self,
-        session: AsyncSession
-    ):
+    def __init__(self, session: AsyncSession):
         super().__init__(RoleRepository(session))
         self._permission_repo = PermissionRepository(session)
         self._role_permission_repo = RolePermissionRepository(session)

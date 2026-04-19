@@ -21,11 +21,11 @@ class ComplexRepository(AuditableRepository[Complex]):
         return statement.options(
             selectinload(Complex.creator).selectinload(User.role),
             (
-                selectinload(Complex.masts.and_(Mast.deleted_at is None))
+                selectinload(Complex.masts.and_(Mast.deleted_at.is_(None)))
                 .selectinload(Mast.config)
-                .selectinload(MastConfig.yards.and_(MastYard.deleted_at is None))
+                .selectinload(MastConfig.yards.and_(MastYard.deleted_at.is_(None)))
             ),
-            selectinload(Complex.users.and_(User.deleted_at is None)).selectinload(
+            selectinload(Complex.users.and_(User.deleted_at.is_(None))).selectinload(
                 User.role
             ),
         )

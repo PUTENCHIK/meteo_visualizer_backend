@@ -33,6 +33,25 @@ async def get_complexes(
     return await service.get_all(include_deleted)
 
 
+@complexes_router.get(
+    "/{id_}",
+    response_model=ComplexWithMastsSchema,
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Комплекс не найден"),
+        ]
+    ),
+)
+async def get_complex(
+    id_: UUID,
+    include_deleted: bool = False,
+    service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    user: User = Depends(required(p.COMPLEX_READ)),
+):
+    return await service.get_by_id(id_, include_deleted)
+
+
 @complexes_router.post(
     "/",
     response_model=ComplexWithMastsSchema,

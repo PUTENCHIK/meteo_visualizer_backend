@@ -1,5 +1,6 @@
 from typing import override
 from uuid import UUID
+
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models import Mast
@@ -29,10 +30,7 @@ class MastService(AuditableService[Mast, MastRepository]):
     def config_repo(self) -> MastConfigRepository:
         return self._config_repo
 
-    def __init__(
-        self,
-        session: AsyncSession
-    ):
+    def __init__(self, session: AsyncSession):
         super().__init__(MastRepository(session))
         self._complex_repo = ComplexRepository(session)
         self._config_repo = MastConfigRepository(session)

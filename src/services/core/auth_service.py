@@ -1,8 +1,8 @@
 from typing import Optional
 from uuid import UUID
-from sqlmodel.ext.asyncio.session import AsyncSession
 
 from fastapi import Response
+from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.auth.enums import SystemPermission
 from src.auth.tokens import RefreshToken
