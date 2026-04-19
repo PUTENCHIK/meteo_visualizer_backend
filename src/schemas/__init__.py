@@ -3,14 +3,16 @@ from src.schemas.auth import (
     SigninSchema as SigninSchema,
     SignupSchema as SignupSchema,
 )
+from src.schemas.complex_accesses import (
+    ComplexAccessSchema as ComplexAccessSchema,
+)
+from src.schemas.complex_favorites import ComplexFavoriteSchema as ComplexFavoriteSchema
 from src.schemas.complexes import (
+    ComplexFullSchema as ComplexFullSchema,
     ComplexSchema as ComplexSchema,
     ComplexWithMastsSchema as ComplexWithMastsSchema,
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
-)
-from src.schemas.complexes_users import (
-    ComplexUserSchema as ComplexUserSchema,
 )
 from src.schemas.mast_configs import (
     CreateMastConfigSchema as CreateMastConfigSchema,
@@ -61,4 +63,5 @@ RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()
 ComplexSchema.model_rebuild()
 ComplexWithMastsSchema.model_rebuild()
+ComplexFullSchema.model_rebuild()
 ActiveUserSchema.model_rebuild()

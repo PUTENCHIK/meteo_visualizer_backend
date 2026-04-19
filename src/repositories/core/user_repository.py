@@ -23,8 +23,12 @@ class UserRepository(AuditableRepository[User]):
             selectinload(User.role).selectinload(Role.parent),
             selectinload(User.role).selectinload(Role.children),
             selectinload(User.role).selectinload(Role.permissions),
-            selectinload(User.complexes).selectinload(Complex.creator),
-            selectinload(User.complexes)
+            selectinload(User.accessible_complexes).selectinload(Complex.creator),
+            selectinload(User.accessible_complexes)
+            .selectinload(Complex.masts)
+            .selectinload(Mast.config)
+            .selectinload(MastConfig.yards),
+            selectinload(User.favorite_complexes)
             .selectinload(Complex.masts)
             .selectinload(Mast.config)
             .selectinload(MastConfig.yards),

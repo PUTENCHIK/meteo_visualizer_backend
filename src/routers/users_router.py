@@ -9,7 +9,7 @@ from src.factories import AuthFactory, ServiceFactory
 from src.models import User
 from src.schemas import (
     ActiveUserSchema,
-    ComplexUserSchema,
+    ComplexAccessSchema,
     ResponseModel,
     UpdateUserSchema,
     UserSchema,
@@ -52,7 +52,7 @@ async def get_active_user(
 
 @users_router.get(
     "/me/complexes",
-    response_model=List[ComplexUserSchema],
+    response_model=List[ComplexAccessSchema],
     status_code=200,
     responses=get_responses(
         [

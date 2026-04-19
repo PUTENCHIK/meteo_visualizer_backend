@@ -10,7 +10,8 @@ if TYPE_CHECKING:
     from src.models.auth.role_permission import RolePermission
     from src.models.complexes.complex import Complex
     from src.models.measures.measure import Measure
-from src.models.complexes.complex_user import ComplexUser
+from src.models.complexes.complex_access import ComplexAccess
+from src.models.complexes.complex_favorite import ComplexFavorite
 
 
 class User(AuditableModel, table=True):
@@ -24,21 +25,59 @@ class User(AuditableModel, table=True):
     role_id: UUID = Field(foreign_key="roles.id")
 
     role: "Role" = Relationship(back_populates="users")
-    complexes: List["Complex"] = Relationship(
-        back_populates="users",
-        link_model=ComplexUser,
+    created_role_permission_links: List["RolePermission"] = Relationship(
+        back_populates="creator"
+    )
+
+    accessible_complexes: List["Complex"] = Relationship(
+        back_populates="users_with_access",
+        link_model=ComplexAccess,
         sa_relationship_kwargs={
-            "primaryjoin": "User.id == ComplexUser.user_id",
-            "secondaryjoin": "Complex.id == ComplexUser.complex_id",
+            "primaryjoin": "User.id == ComplexAccess.user_id",
+            "secondaryjoin": "Complex.id == ComplexAccess.complex_id",
+            "overlaps": "user,complex",
+        },
+    )
+    favorite_complexes: List["Complex"] = Relationship(
+        back_populates="users_with_favorite",
+        link_model=ComplexFavorite,
+        sa_relationship_kwargs={
+            "primaryjoin": "User.id == ComplexFavorite.user_id",
+            "secondaryjoin": "Complex.id == ComplexFavorite.complex_id",
             "overlaps": "user,complex",
         },
     )
     created_complexes: List["Complex"] = Relationship(back_populates="creator")
-    created_role_permission_links: List["RolePermission"] = Relationship(
-        back_populates="creator"
+
+    access_links: List["ComplexAccess"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={
+            "foreign_keys": "[ComplexAccess.user_id]",
+            "cascade": "all, delete-orphan",
+            "overlaps": "accessible_complexes",
+        },
     )
-    created_complex_user_links: List["ComplexUser"] = Relationship(
+    favorite_links: List["ComplexFavorite"] = Relationship(
+        back_populates="user",
+        sa_relationship_kwargs={
+            "foreign_keys": "[ComplexFavorite.user_id]",
+            "cascade": "all, delete-orphan",
+            "overlaps": "favorite_complexes",
+        },
+    )
+    created_complex_access_links: List["ComplexAccess"] = Relationship(
         back_populates="creator",
-        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.creator_id]"},
+        sa_relationship_kwargs={
+            "foreign_keys": "[ComplexAccess.creator_id]",
+            "cascade": "all, delete-orphan",
+        },
     )
+    created_complex_favorite_links: List["ComplexFavorite"] = Relationship(
+        back_populates="creator",
+        sa_relationship_kwargs={
+            "foreign_keys": "[ComplexFavorite.creator_id]",
+            "cascade": "all, delete-orphan",
+        },
+    )
+
     created_measures: List["Measure"] = Relationship(back_populates="creator")

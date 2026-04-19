@@ -10,7 +10,8 @@ from src.models.base.auditable_model import AuditableModel
 if TYPE_CHECKING:
     from src.models.auth.user import User
     from src.models.complexes.mast import Mast
-from src.models.complexes.complex_user import ComplexUser
+from src.models.complexes.complex_access import ComplexAccess
+from src.models.complexes.complex_favorite import ComplexFavorite
 
 
 class Complex(AuditableModel, table=True):
@@ -18,7 +19,7 @@ class Complex(AuditableModel, table=True):
 
     name: str = Field(nullable=False, index=True)
     creator_id: UUID = Field(foreign_key="users.id")
-    password_hash: Optional[str] = Field(default=None)
+    secretkey: Optional[str] = Field(default=None)
     is_private: bool = Field(default=False, index=True)
     latitude: Decimal = Field(sa_column=Column(Numeric(precision=8, scale=6)))
     longitude: Decimal = Field(sa_column=Column(Numeric(precision=9, scale=6)))
@@ -26,12 +27,41 @@ class Complex(AuditableModel, table=True):
 
     creator: "User" = Relationship(back_populates="created_complexes")
     masts: List["Mast"] = Relationship(back_populates="complex")
-    users: List["User"] = Relationship(
-        back_populates="complexes",
-        link_model=ComplexUser,
+
+    users_with_access: List["User"] = Relationship(
+        back_populates="accessible_complexes",
+        link_model=ComplexAccess,
         sa_relationship_kwargs={
-            "primaryjoin": "Complex.id == ComplexUser.complex_id",
-            "secondaryjoin": "User.id == ComplexUser.user_id",
-            "overlaps": "user,complex",
+            "primaryjoin": "Complex.id == ComplexAccess.complex_id",
+            "secondaryjoin": "User.id == ComplexAccess.user_id",
+            "overlaps": "complex,access_links,user",
         },
     )
+    users_with_favorite: List["User"] = Relationship(
+        back_populates="favorite_complexes",
+        link_model=ComplexFavorite,
+        sa_relationship_kwargs={
+            "primaryjoin": "Complex.id == ComplexFavorite.complex_id",
+            "secondaryjoin": "User.id == ComplexFavorite.user_id",
+            "overlaps": "complex,favorite_links,user",
+        },
+    )
+
+    access_links: List["ComplexAccess"] = Relationship(
+        back_populates="complex",
+        sa_relationship_kwargs={
+            "cascade": "all, delete-orphan",
+            "overlaps": "accessible_complexes,users_with_access",
+        },
+    )
+    favorite_links: List["ComplexFavorite"] = Relationship(
+        back_populates="complex",
+        sa_relationship_kwargs={
+            "cascade": "all, delete-orphan",
+            "overlaps": "favorite_complexes,users_with_favorite",
+        },
+    )
+
+    @property
+    def is_secreted(self) -> bool:
+        return self.secretkey is not None

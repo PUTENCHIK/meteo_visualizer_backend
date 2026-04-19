@@ -4,11 +4,11 @@ from src.repositories.abstractions.auditable_repository import (
 from src.repositories.abstractions.base_repository import (
     BaseRepository as BaseRepository,
 )
+from src.repositories.core.complex_access_repository import (
+    ComplexAccessRepository as ComplexAccessRepository,
+)
 from src.repositories.core.complex_repository import (
     ComplexRepository as ComplexRepository,
-)
-from src.repositories.core.complex_user_repository import (
-    ComplexUserRepository as ComplexUserRepository,
 )
 from src.repositories.core.mast_config_repository import (
     MastConfigRepository as MastConfigRepository,

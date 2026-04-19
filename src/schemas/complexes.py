@@ -9,8 +9,8 @@ if TYPE_CHECKING:
     from src.schemas.users import UserSchema
 
 
-class PaswordSchema(BaseSchema):
-    password: Optional[str] = None
+class SecretkeySchema(BaseSchema):
+    secretkey: Optional[str] = None
 
 
 class ComplexBaseSchema(BaseSchema):
@@ -21,11 +21,11 @@ class ComplexBaseSchema(BaseSchema):
     address: Optional[str] = None
 
 
-class CreateComplexSchema(ComplexBaseSchema, PaswordSchema):
+class CreateComplexSchema(ComplexBaseSchema, SecretkeySchema):
     pass
 
 
-class UpdateComplexSchema(ComplexBaseSchema, PaswordSchema):
+class UpdateComplexSchema(ComplexBaseSchema, SecretkeySchema):
     name: Optional[str] = None
     is_private: Optional[bool] = None
     latitude: Optional[Decimal] = None
@@ -35,7 +35,12 @@ class UpdateComplexSchema(ComplexBaseSchema, PaswordSchema):
 class ComplexSchema(AuditableModelSchema, ComplexBaseSchema):
     creator_id: UUID
     creator: "UserSchema"
+    is_secreted: bool
 
 
 class ComplexWithMastsSchema(ComplexSchema):
     masts: List[MastSchema]
+
+
+class ComplexFullSchema(ComplexWithMastsSchema):
+    secretkey: Optional[str]

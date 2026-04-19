@@ -10,19 +10,18 @@ if TYPE_CHECKING:
     from src.models.complexes.complex import Complex
 
 
-class ComplexUser(ManyToManyModel, table=True):
-    __tablename__ = "complexes_users"
+class ComplexFavorite(ManyToManyModel, table=True):
+    __tablename__ = "complex_favorites"
 
     complex_id: UUID = Field(foreign_key="complexes.id", primary_key=True)
     user_id: UUID = Field(foreign_key="users.id", primary_key=True)
     creator_id: Optional[UUID] = Field(foreign_key="users.id", default=None)
-    has_access: bool = Field(default=False)
 
     complex: "Complex" = Relationship()
     user: "User" = Relationship(
-        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.user_id]"}
+        sa_relationship_kwargs={"foreign_keys": "[ComplexFavorite.user_id]"}
     )
     creator: Optional["User"] = Relationship(
-        back_populates="created_complex_user_links",
-        sa_relationship_kwargs={"foreign_keys": "[ComplexUser.creator_id]"},
+        back_populates="created_complex_favorite_links",
+        sa_relationship_kwargs={"foreign_keys": "[ComplexFavorite.creator_id]"},
     )

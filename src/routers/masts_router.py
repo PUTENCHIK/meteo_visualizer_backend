@@ -32,6 +32,25 @@ async def get_masts(
     return await service.get_all()
 
 
+@masts_router.get(
+    "/{id_}",
+    response_model=MastSchema,
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Мачта не найдена"),
+        ]
+    ),
+)
+async def get_mast(
+    id_: UUID,
+    include_deleted: bool = False,
+    service: MastService = Depends(ServiceFactory.get_mast_service),
+    user: User = Depends(required(p.MAST_READ)),
+):
+    return await service.get_by_id(id_, include_deleted)
+
+
 @masts_router.post(
     "/",
     response_model=MastSchema,

@@ -25,7 +25,10 @@ class ComplexRepository(AuditableRepository[Complex]):
                 .selectinload(Mast.config)
                 .selectinload(MastConfig.yards.and_(MastYard.deleted_at.is_(None)))
             ),
-            selectinload(Complex.users.and_(User.deleted_at.is_(None))).selectinload(
-                User.role
-            ),
+            selectinload(
+                Complex.users_with_access.and_(User.deleted_at.is_(None))
+            ).selectinload(User.role),
+            selectinload(
+                Complex.users_with_favorite.and_(User.deleted_at.is_(None))
+            ).selectinload(User.role),
         )

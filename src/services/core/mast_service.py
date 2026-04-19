@@ -69,4 +69,4 @@ class MastService(AuditableService[Mast, MastRepository]):
     async def delete_mast(self, id_: UUID):
         mast = await self.get_by_id(id_)
 
-        await self._delete(mast)
+        await self._delete(mast, force=True)

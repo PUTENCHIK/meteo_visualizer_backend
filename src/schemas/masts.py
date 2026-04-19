@@ -10,6 +10,7 @@ class MastBaseSchema(BaseSchema):
     config_id: UUID
     latitude: Decimal
     longitude: Decimal
+    rotation: int
 
 
 class CreateMastSchema(MastBaseSchema):
@@ -20,6 +21,7 @@ class UpdateMastSchema(MastBaseSchema):
     config_id: Optional[UUID] = None
     latitude: Optional[Decimal] = None
     longitude: Optional[Decimal] = None
+    rotation: Optional[int] = None
 
 
 class MastSchema(AuditableModelSchema, CreateMastSchema):

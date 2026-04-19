@@ -42,5 +42,6 @@ class UserSchema(AuditableModelSchema, UserBaseSchema):
 
 class ActiveUserSchema(UserSchema):
     role: RoleWithPermissionsSchema
-    complexes: List["ComplexSchema"]
+    accessible_complexes: List["ComplexSchema"]
+    favorite_complexes: List["ComplexSchema"]
     created_complexes: List["ComplexSchema"]

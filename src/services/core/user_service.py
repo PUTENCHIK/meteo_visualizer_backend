@@ -3,8 +3,8 @@ from uuid import UUID
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.models import ComplexUser, User
-from src.repositories import ComplexUserRepository, RoleRepository, UserRepository
+from src.models import ComplexAccess, User
+from src.repositories import ComplexAccessRepository, RoleRepository, UserRepository
 from src.schemas import UpdateUserSchema
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
@@ -20,20 +20,20 @@ class UserService(AuditableService[User, UserRepository]):
     """
 
     _role_repo: RoleRepository
-    _comp_user_repo: ComplexUserRepository
+    _complex_access_repo: ComplexAccessRepository
 
     @property
     def role_repo(self) -> RoleRepository:
         return self._role_repo
 
     @property
-    def comp_user_repo(self) -> ComplexUserRepository:
-        return self._comp_user_repo
+    def complex_access_repo(self) -> ComplexAccessRepository:
+        return self._complex_access_repo
 
     def __init__(self, session: AsyncSession):
         super().__init__(UserRepository(session))
         self._role_repo = RoleRepository(session)
-        self._comp_user_repo = ComplexUserRepository(session)
+        self._complex_access_repo = ComplexAccessRepository(session)
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> User:
@@ -42,8 +42,8 @@ class UserService(AuditableService[User, UserRepository]):
             raise UserNotFoundException(id_)
         return user
 
-    async def get_user_complexes(self, user: User) -> List[ComplexUser]:
-        links = await self.comp_user_repo.get_by_user(user.id)
+    async def get_user_complexes(self, user: User) -> List[ComplexAccess]:
+        links = await self.complex_access_repo.get_by_user(user.id)
 
         return sorted(links, key=lambda x: x.complex.updated_at, reverse=True)
 

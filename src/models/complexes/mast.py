@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from sqlalchemy import Column, Numeric
+from sqlalchemy import Column, Numeric, SmallInteger
 from sqlmodel import Field, Relationship
 
 from src.models.base.auditable_model import AuditableModel
@@ -19,6 +19,7 @@ class Mast(AuditableModel, table=True):
     config_id: UUID = Field(foreign_key="mast_configs.id")
     latitude: Decimal = Field(sa_column=Column(Numeric(precision=8, scale=6)))
     longitude: Decimal = Field(sa_column=Column(Numeric(precision=9, scale=6)))
+    rotation: int = Field(sa_column=Column(SmallInteger, default=0))
 
     complex: "Complex" = Relationship(back_populates="masts")
     config: "MastConfig" = Relationship(back_populates="masts")

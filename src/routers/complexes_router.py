@@ -8,6 +8,7 @@ from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
 from src.schemas import (
+    ComplexFullSchema,
     ComplexWithMastsSchema,
     CreateComplexSchema,
     ResponseModel,
@@ -35,7 +36,7 @@ async def get_complexes(
 
 @complexes_router.get(
     "/{id_}",
-    response_model=ComplexWithMastsSchema,
+    response_model=ComplexFullSchema,
     status_code=200,
     responses=get_responses(
         [

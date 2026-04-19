@@ -3,9 +3,8 @@ from uuid import UUID
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.managers import PasswordManager
 from src.models import Complex, User
-from src.repositories import ComplexRepository
+from src.repositories import ComplexRepository, MastRepository
 from src.schemas import CreateComplexSchema, UpdateComplexSchema
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
@@ -19,14 +18,15 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
     Сервис комплексов
     """
 
-    _password_manager: PasswordManager = PasswordManager()
+    _mast_repo: MastRepository
 
     @property
-    def password_manager(self) -> PasswordManager:
-        return self._password_manager
+    def mast_repo(self) -> MastRepository:
+        return self._mast_repo
 
     def __init__(self, session: AsyncSession):
         super().__init__(ComplexRepository(session))
+        self._mast_repo = MastRepository(session)
 
     @override
     async def get_by_id(self, id_, include_deleted=False) -> Complex:
@@ -36,15 +36,8 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
         return complex
 
     async def create_complex(self, data: CreateComplexSchema, user: User) -> Complex:
-        password_hash = (
-            self.password_manager.hash_password(data.password)
-            if data.password
-            else None
-        )
-
         new_complex = Complex(
-            **data.model_dump(exclude={"password"}),
-            password_hash=password_hash,
+            **data.model_dump(),
             creator_id=user.id,
         )
         new_complex = await self._create(new_complex)
@@ -57,26 +50,22 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
         if complex.deleted_at is None:
             raise ComplexNotDeletedException(id_)
 
+        masts = await self.mast_repo.get_by_complex(id_, include_deleted=True)
+        for mast in masts:
+            print(mast.id, mast.deleted_at)
+            await self.mast_repo.restore(mast)
+
         return await self._restore(complex)
 
     async def update_complex(self, id_: UUID, data: UpdateComplexSchema) -> Complex:
         complex = await self.get_by_id(id_)
-
-        json_data = data.model_dump(exclude_unset=True)
-
-        if "password" in json_data:
-            raw_password = json_data.pop("password")
-            complex.password_hash = (
-                self.password_manager.hash_password(raw_password)
-                if raw_password
-                else None
-            )
 
         return await self._update(complex, data)
 
     async def delete_complex(self, id_: UUID, force: bool = False):
         complex = await self.get_by_id(id_)
 
-        # TODO: удалять связанные мачты
+        for mast in complex.masts:
+            await self.mast_repo.delete(mast, force)
 
         return await self._delete(complex, force)

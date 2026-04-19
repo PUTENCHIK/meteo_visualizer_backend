@@ -1,4 +1,5 @@
-from typing import override
+from typing import List, override
+from uuid import UUID
 
 from sqlalchemy.orm import selectinload
 
@@ -24,3 +25,12 @@ class MastRepository(AuditableRepository[Mast]):
             ),
             selectinload(Mast.complex),
         )
+
+    async def get_by_complex(
+        self, complex_id: UUID, include_deleted: bool = False
+    ) -> List[Mast]:
+        statement = self._get_all_query(include_deleted).where(
+            Mast.complex_id == complex_id
+        )
+        result = await self.session.exec(statement)
+        return result.all()
