@@ -37,10 +37,14 @@ class UpdateUserSchema(NamesSchema, RoleIdSchema):
 
 
 class UserSchema(AuditableModelSchema, UserBaseSchema):
+    pass
+
+
+class UserWithRoleSchema(UserSchema):
     role: RoleSchema
 
 
-class ActiveUserSchema(UserSchema):
+class ActiveUserSchema(UserWithRoleSchema):
     role: RoleWithPermissionsSchema
     accessible_complexes: List["ComplexSchema"]
     favorite_complexes: List["ComplexSchema"]

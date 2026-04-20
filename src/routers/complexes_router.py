@@ -8,8 +8,10 @@ from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
 from src.schemas import (
-    ComplexFullSchema,
+    ComplexFavoriteSchema,
+    ComplexWithFavoriteInfoSchema,
     ComplexWithMastsSchema,
+    ComplexWithSecretkeySchema,
     CreateComplexSchema,
     ResponseModel,
     UpdateComplexSchema,
@@ -22,7 +24,7 @@ complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 
 @complexes_router.get(
     "/",
-    response_model=List[ComplexWithMastsSchema],
+    response_model=List[ComplexWithFavoriteInfoSchema],
     status_code=200,
     responses=get_responses(),
 )
@@ -31,12 +33,12 @@ async def get_complexes(
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
     user: User = Depends(required(p.COMPLEX_READ)),
 ):
-    return await service.get_all(include_deleted)
+    return await service.get_all_with_favorite(user.id, include_deleted)
 
 
 @complexes_router.get(
     "/{id_}",
-    response_model=ComplexFullSchema,
+    response_model=ComplexWithSecretkeySchema,
     status_code=200,
     responses=get_responses(
         [
@@ -70,6 +72,7 @@ async def create_complex(
 @complexes_router.post(
     "/{id_}",
     status_code=200,
+    response_model=ComplexWithMastsSchema,
     responses=get_responses(
         [
             ResponseModel(status_code=400, description="Комплекс не удалён"),
@@ -120,3 +123,38 @@ async def delete_complex(
     user: User = Depends(required(p.COMPLEX_DELETE)),
 ):
     return await service.delete_complex(id_, force)
+
+
+@complexes_router.post(
+    "/{id_}/favorite",
+    response_model=ComplexFavoriteSchema,
+    status_code=201,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Комплекс не найден"),
+        ]
+    ),
+)
+async def add_complex_to_user_favorites(
+    id_: UUID,
+    service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    user: User = Depends(required(p.COMPLEX_FAVORITE_CREATE)),
+):
+    return await service.create_complex_favorite(id_, user.id)
+
+
+@complexes_router.delete(
+    "/{id_}/favorite",
+    status_code=204,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Комплекс не найден"),
+        ]
+    ),
+)
+async def delete_complex_from_user_favorites(
+    id_: UUID,
+    service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    user: User = Depends(required(p.COMPLEX_FAVORITE_DELETE)),
+):
+    return await service.delete_complex_favorite(id_, user.id)

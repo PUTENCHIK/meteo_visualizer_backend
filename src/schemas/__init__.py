@@ -8,9 +8,11 @@ from src.schemas.complex_accesses import (
 )
 from src.schemas.complex_favorites import ComplexFavoriteSchema as ComplexFavoriteSchema
 from src.schemas.complexes import (
-    ComplexFullSchema as ComplexFullSchema,
     ComplexSchema as ComplexSchema,
+    ComplexWithCreatorSchema as ComplexWithCreatorSchema,
+    ComplexWithFavoriteInfoSchema as ComplexWithFavoriteInfoSchema,
     ComplexWithMastsSchema as ComplexWithMastsSchema,
+    ComplexWithSecretkeySchema as ComplexWithSecretkeySchema,
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
 )
@@ -57,11 +59,13 @@ from src.schemas.users import (
     ActiveUserSchema as ActiveUserSchema,
     UpdateUserSchema as UpdateUserSchema,
     UserSchema as UserSchema,
+    UserWithRoleSchema as UserWithRoleSchema,
 )
 
 RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()
-ComplexSchema.model_rebuild()
+ComplexWithCreatorSchema.model_rebuild()
 ComplexWithMastsSchema.model_rebuild()
-ComplexFullSchema.model_rebuild()
+ComplexWithSecretkeySchema.model_rebuild()
+ComplexWithFavoriteInfoSchema.model_rebuild()
 ActiveUserSchema.model_rebuild()

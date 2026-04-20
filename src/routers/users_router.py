@@ -12,7 +12,7 @@ from src.schemas import (
     ComplexAccessSchema,
     ResponseModel,
     UpdateUserSchema,
-    UserSchema,
+    UserWithRoleSchema,
 )
 from src.services import UserService
 from src.utils import get_responses
@@ -22,7 +22,7 @@ users_router = APIRouter(prefix="/users", tags=["Пользователи"])
 
 @users_router.get(
     "/",
-    response_model=List[UserSchema],
+    response_model=List[UserWithRoleSchema],
     status_code=200,
     responses=get_responses(),
 )
@@ -69,7 +69,7 @@ async def get_active_user_complexes(
 
 @users_router.post(
     "/{id_}",
-    response_model=UserSchema,
+    response_model=UserWithRoleSchema,
     status_code=200,
     responses=get_responses(
         [
@@ -88,7 +88,7 @@ async def restore_user(
 
 @users_router.patch(
     "/{id_}",
-    response_model=UserSchema,
+    response_model=UserWithRoleSchema,
     status_code=200,
     responses=get_responses(
         [

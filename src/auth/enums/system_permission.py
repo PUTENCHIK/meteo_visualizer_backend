@@ -40,3 +40,6 @@ class SystemPermission(Enum):
     MAST_YARD_CREATE = "mast_yard:create"
     MAST_YARD_UPDATE = "mast_yard:update"
     MAST_YARD_DELETE = "mast_yard:delete"
+
+    COMPLEX_FAVORITE_CREATE = "complex_favorite:create"
+    COMPLEX_FAVORITE_DELETE = "complex_favorite:delete"

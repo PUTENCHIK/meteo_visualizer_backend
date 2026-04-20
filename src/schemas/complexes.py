@@ -6,7 +6,7 @@ from src.schemas.base import AuditableModelSchema, BaseSchema
 from src.schemas.masts import MastSchema
 
 if TYPE_CHECKING:
-    from src.schemas.users import UserSchema
+    from src.schemas.users import UserWithRoleSchema
 
 
 class SecretkeySchema(BaseSchema):
@@ -34,13 +34,20 @@ class UpdateComplexSchema(ComplexBaseSchema, SecretkeySchema):
 
 class ComplexSchema(AuditableModelSchema, ComplexBaseSchema):
     creator_id: UUID
-    creator: "UserSchema"
     is_secreted: bool
 
 
-class ComplexWithMastsSchema(ComplexSchema):
+class ComplexWithCreatorSchema(ComplexSchema):
+    creator: "UserWithRoleSchema"
+
+
+class ComplexWithMastsSchema(ComplexWithCreatorSchema):
     masts: List[MastSchema]
 
 
-class ComplexFullSchema(ComplexWithMastsSchema):
+class ComplexWithSecretkeySchema(ComplexWithMastsSchema):
     secretkey: Optional[str]
+
+
+class ComplexWithFavoriteInfoSchema(ComplexWithMastsSchema):
+    is_favorite: bool = False

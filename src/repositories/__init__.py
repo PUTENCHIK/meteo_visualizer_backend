@@ -7,6 +7,9 @@ from src.repositories.abstractions.base_repository import (
 from src.repositories.core.complex_access_repository import (
     ComplexAccessRepository as ComplexAccessRepository,
 )
+from src.repositories.core.complex_favorite_repository import (
+    ComplexFavoriteRepository as ComplexFavoriteRepository,
+)
 from src.repositories.core.complex_repository import (
     ComplexRepository as ComplexRepository,
 )
