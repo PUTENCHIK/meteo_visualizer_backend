@@ -12,7 +12,6 @@ from src.schemas.complexes import (
     ComplexWithCreatorSchema as ComplexWithCreatorSchema,
     ComplexWithFavoriteInfoSchema as ComplexWithFavoriteInfoSchema,
     ComplexWithMastsSchema as ComplexWithMastsSchema,
-    ComplexWithSecretkeySchema as ComplexWithSecretkeySchema,
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
 )
@@ -66,6 +65,5 @@ RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()
 ComplexWithCreatorSchema.model_rebuild()
 ComplexWithMastsSchema.model_rebuild()
-ComplexWithSecretkeySchema.model_rebuild()
 ComplexWithFavoriteInfoSchema.model_rebuild()
 ActiveUserSchema.model_rebuild()

@@ -45,9 +45,6 @@ class ComplexWithMastsSchema(ComplexWithCreatorSchema):
     masts: List[MastSchema]
 
 
-class ComplexWithSecretkeySchema(ComplexWithMastsSchema):
-    secretkey: Optional[str]
-
-
 class ComplexWithFavoriteInfoSchema(ComplexWithMastsSchema):
     is_favorite: bool = False
+    secretkey: Optional[str]

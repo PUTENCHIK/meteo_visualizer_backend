@@ -50,12 +50,12 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
         return complex
 
     async def get_all_with_favorite(
-        self, user_id: UUID, include_deleted: bool = False
+        self, user: User, include_deleted: bool = False
     ) -> List[ComplexWithFavoriteInfoSchema]:
-        complexes = await self._repository.get_all(include_deleted)
+        complexes = await self.repository.get_all(include_deleted)
 
         favorite_ids = await self.complex_favorite_repo.get_favorites_of_user(
-            user_id=user_id, complex_ids=[c.id for c in complexes]
+            user_id=user.id, complex_ids=[c.id for c in complexes]
         )
         ids_set = set(favorite_ids)
 
@@ -65,6 +65,17 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
             schema.is_favorite = complex.id in ids_set
             schemas.append(schema)
         return schemas
+
+    async def get_by_id_with_favorite(
+        self, id_: UUID, user: User, include_deleted: bool = False
+    ) -> ComplexWithFavoriteInfoSchema:
+        complex = await self.get_by_id(id_, include_deleted)
+        link = await self.complex_favorite_repo.get_by_ids(id_, user.id)
+
+        schema = ComplexWithFavoriteInfoSchema.model_validate(complex)
+        schema.is_favorite = link is not None
+
+        return schema
 
     async def create_complex(self, data: CreateComplexSchema, user: User) -> Complex:
         new_complex = Complex(
@@ -89,8 +100,9 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
 
     async def update_complex(self, id_: UUID, data: UpdateComplexSchema) -> Complex:
         complex = await self.get_by_id(id_)
+        await self._update(complex, data)
 
-        return await self._update(complex, data)
+        return await self.get_by_id(id_)
 
     async def delete_complex(self, id_: UUID, force: bool = False):
         complex = await self.get_by_id(id_)

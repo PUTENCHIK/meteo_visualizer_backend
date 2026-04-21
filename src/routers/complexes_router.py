@@ -11,7 +11,6 @@ from src.schemas import (
     ComplexFavoriteSchema,
     ComplexWithFavoriteInfoSchema,
     ComplexWithMastsSchema,
-    ComplexWithSecretkeySchema,
     CreateComplexSchema,
     ResponseModel,
     UpdateComplexSchema,
@@ -25,6 +24,7 @@ complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 @complexes_router.get(
     "/",
     response_model=List[ComplexWithFavoriteInfoSchema],
+    response_model_exclude_unset=True,
     status_code=200,
     responses=get_responses(),
 )
@@ -33,12 +33,13 @@ async def get_complexes(
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
     user: User = Depends(required(p.COMPLEX_READ)),
 ):
-    return await service.get_all_with_favorite(user.id, include_deleted)
+    return await service.get_all_with_favorite(user, include_deleted)
 
 
 @complexes_router.get(
     "/{id_}",
-    response_model=ComplexWithSecretkeySchema,
+    response_model=ComplexWithFavoriteInfoSchema,
+    response_model_exclude_unset=True,
     status_code=200,
     responses=get_responses(
         [
@@ -52,7 +53,7 @@ async def get_complex(
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
     user: User = Depends(required(p.COMPLEX_READ)),
 ):
-    return await service.get_by_id(id_, include_deleted)
+    return await service.get_by_id_with_favorite(id_, user, include_deleted)
 
 
 @complexes_router.post(
