@@ -31,8 +31,8 @@ class MastYardService(AuditableService[MastYard, MastYardRepository]):
         self._config_repo = MastConfigRepository(session)
 
     @override
-    async def get_by_id(self, id_, include_deleted=False) -> MastYard:
-        mast_yard = await self.repository.get_by_id(id_, include_deleted)
+    async def get_by_id(self, id_) -> MastYard:
+        mast_yard = await self.repository.get_by_id(id_)
         if not mast_yard:
             raise MastYardNotFoundException(id_)
         return mast_yard
@@ -69,4 +69,4 @@ class MastYardService(AuditableService[MastYard, MastYardRepository]):
     async def delete_mast_yard(self, id_: UUID):
         yard = await self.repository.get_by_id(id_)
 
-        await self._delete(yard)
+        await self._delete(yard, force=True)

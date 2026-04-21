@@ -25,4 +25,4 @@ class UpdateMastSchema(MastBaseSchema):
 
 
 class MastSchema(AuditableModelSchema, CreateMastSchema):
-    config: MastConfigSchema
+    config: Optional[MastConfigSchema] = None

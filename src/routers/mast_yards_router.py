@@ -32,6 +32,24 @@ async def get_mast_yards(
     return await service.get_all()
 
 
+@mast_yards_router.get(
+    "/{id_}",
+    response_model=MastYardSchema,
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Рея не найдена"),
+        ]
+    ),
+)
+async def get_mast_yard(
+    id_: UUID,
+    service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
+    user: User = Depends(required(p.MAST_YARD_READ)),
+):
+    return await service.get_by_id(id_)
+
+
 @mast_yards_router.post(
     "/",
     response_model=MastYardSchema,

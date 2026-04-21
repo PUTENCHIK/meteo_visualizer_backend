@@ -36,8 +36,8 @@ class MastService(AuditableService[Mast, MastRepository]):
         self._config_repo = MastConfigRepository(session)
 
     @override
-    async def get_by_id(self, id_, include_deleted=False) -> Mast:
-        mast = await self.repository.get_by_id(id_, include_deleted)
+    async def get_by_id(self, id_) -> Mast:
+        mast = await self.repository.get_by_id(id_)
         if not mast:
             raise MastNotFoundException(id_)
         return mast

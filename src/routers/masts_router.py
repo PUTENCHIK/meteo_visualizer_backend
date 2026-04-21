@@ -44,11 +44,10 @@ async def get_masts(
 )
 async def get_mast(
     id_: UUID,
-    include_deleted: bool = False,
     service: MastService = Depends(ServiceFactory.get_mast_service),
     user: User = Depends(required(p.MAST_READ)),
 ):
-    return await service.get_by_id(id_, include_deleted)
+    return await service.get_by_id(id_)
 
 
 @masts_router.post(

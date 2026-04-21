@@ -1,4 +1,4 @@
-from typing import Optional, override
+from typing import List, Optional, override
 from uuid import UUID
 
 from sqlalchemy.orm import selectinload
@@ -27,3 +27,12 @@ class MastYardRepository(AuditableRepository[MastYard]):
         )
         result = await self.session.exec(statement)
         return result.one_or_none()
+
+    async def get_by_config(
+        self, config_id: UUID, include_deleted: bool = False
+    ) -> List[MastYard]:
+        statement = self._get_all_query(include_deleted).where(
+            MastYard.config_id == config_id
+        )
+        result = await self.session.exec(statement)
+        return result.all()

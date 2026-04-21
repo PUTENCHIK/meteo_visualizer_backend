@@ -33,6 +33,25 @@ async def get_mast_configs(
     return await service.get_all(include_deleted)
 
 
+@mast_configs_router.get(
+    "/{id_}",
+    response_model=MastConfigSchema,
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Конфиг не найден"),
+        ]
+    ),
+)
+async def get_mast_config(
+    id_: UUID,
+    include_deleted: bool = False,
+    service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
+    user: User = Depends(required(p.MAST_CONFIG_READ)),
+):
+    return await service.get_by_id(id_, include_deleted)
+
+
 @mast_configs_router.post(
     "/",
     response_model=MastConfigSchema,
@@ -91,13 +110,13 @@ async def update_mast_config(
     responses=get_responses(
         [
             ResponseModel(status_code=404, description="Конфиг не найден"),
+            ResponseModel(status_code=409, description="Конфиг используется мачтами"),
         ]
     ),
 )
 async def delete_mast_config(
     id_: UUID,
-    force: bool = False,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
     user: User = Depends(required(p.MAST_CONFIG_DELETE)),
 ):
-    return await service.delete_mast_config(id_, force)
+    return await service.delete_mast_config(id_)

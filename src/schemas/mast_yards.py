@@ -4,13 +4,17 @@ from uuid import UUID
 from src.schemas.base import AuditableModelSchema, BaseSchema
 
 
+class ConfigIdSchemas(BaseSchema):
+    config_id: UUID
+
+
 class MastYardBaseSchema(BaseSchema):
     height: int
     amount: int
 
 
-class CreateMastYardSchema(MastYardBaseSchema):
-    config_id: UUID
+class CreateMastYardSchema(ConfigIdSchemas, MastYardBaseSchema):
+    pass
 
 
 class UpdateMastYardSchema(MastYardBaseSchema):
