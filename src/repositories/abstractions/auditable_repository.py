@@ -31,11 +31,12 @@ class AuditableRepository(BaseRepository[A]):
         if not include_deleted:
             statement = statement.options(
                 with_loader_criteria(
-                    self.model,
-                    lambda cls: cls.deleted_at.is_(None),
+                    AuditableModel,
+                    lambda cls: getattr(cls, "deleted_at", None) == None,
+                    include_aliases=True
                 )
             )
-        return statement
+        return statement.order_by(self.model.updated_at.desc())
 
     @override
     async def get_all(self, include_deleted: bool = False) -> List[A]:
