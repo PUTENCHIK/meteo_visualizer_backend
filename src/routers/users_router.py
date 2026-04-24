@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import AuthFactory, ServiceFactory
 from src.models import User
@@ -20,6 +20,13 @@ from src.utils import get_responses
 users_router = APIRouter(prefix="/users", tags=["Пользователи"])
 
 
+@users_router.get("/status", status_code=200)
+async def get_auth_status(
+    user: User = Depends(AuthFactory.get_current_user),
+):
+    return {"status": "success"}
+
+
 @users_router.get(
     "/",
     response_model=List[UserWithRoleSchema],
@@ -29,7 +36,7 @@ users_router = APIRouter(prefix="/users", tags=["Пользователи"])
 async def get_users(
     include_deleted: bool = False,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(required(p.USER_READ)),
+    user: User = Depends(PermissionRequired(p.USER_READ)),
 ):
     return await service.get_all(include_deleted)
 
@@ -81,7 +88,7 @@ async def get_active_user_complexes(
 async def restore_user(
     id_: UUID,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(required(p.USER_RESTORE)),
+    user: User = Depends(PermissionRequired(p.USER_RESTORE)),
 ):
     return await service.restore_user(id_)
 
@@ -101,7 +108,7 @@ async def update_user(
     id_: UUID,
     data: UpdateUserSchema,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(required(p.USER_UPDATE)),
+    user: User = Depends(PermissionRequired(p.USER_UPDATE)),
 ):
     return await service.update_user(id_, data)
 
@@ -119,6 +126,6 @@ async def delete_user(
     id_: UUID,
     force: bool = False,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(required(p.USER_DELETE)),
+    user: User = Depends(PermissionRequired(p.USER_DELETE)),
 ):
     return await service.delete_user(id_, force)

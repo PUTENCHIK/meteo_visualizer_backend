@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
@@ -27,7 +27,7 @@ masts_router = APIRouter(prefix="/masts", tags=["Мачты комплексов
 )
 async def get_masts(
     service: MastService = Depends(ServiceFactory.get_mast_service),
-    user: User = Depends(required(p.MAST_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_READ)),
 ):
     return await service.get_all()
 
@@ -45,7 +45,7 @@ async def get_masts(
 async def get_mast(
     id_: UUID,
     service: MastService = Depends(ServiceFactory.get_mast_service),
-    user: User = Depends(required(p.MAST_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_READ)),
 ):
     return await service.get_by_id(id_)
 
@@ -64,7 +64,7 @@ async def get_mast(
 async def create_mast(
     data: CreateMastSchema,
     service: MastService = Depends(ServiceFactory.get_mast_service),
-    user: User = Depends(required(p.MAST_CREATE)),
+    user: User = Depends(PermissionRequired(p.MAST_CREATE)),
 ):
     return await service.create_mast(data)
 
@@ -84,7 +84,7 @@ async def update_mast(
     id_: UUID,
     data: UpdateMastSchema,
     service: MastService = Depends(ServiceFactory.get_mast_service),
-    user: User = Depends(required(p.MAST_UPDATE)),
+    user: User = Depends(PermissionRequired(p.MAST_UPDATE)),
 ):
     return await service.update_mast(id_, data)
 
@@ -101,6 +101,6 @@ async def update_mast(
 async def delete_mast(
     id_: UUID,
     service: MastService = Depends(ServiceFactory.get_mast_service),
-    user: User = Depends(required(p.MAST_DELETE)),
+    user: User = Depends(PermissionRequired(p.MAST_DELETE)),
 ):
     return await service.delete_mast(id_)

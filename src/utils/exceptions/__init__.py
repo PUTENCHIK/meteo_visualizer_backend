@@ -12,6 +12,7 @@ from src.utils.exceptions.core.auth import (
     RoleNotSetException as RoleNotSetException,
     TokenBlockedException as TokenBlockedException,
     TokenExpiredException as TokenExpiredException,
+    TokenMissingException as TokenMissingException,
 )
 from src.utils.exceptions.core.base import (
     AppException as AppException,
@@ -24,6 +25,7 @@ from src.utils.exceptions.core.base import (
 from src.utils.exceptions.core.complexes import (
     ComplexNotDeletedException as ComplexNotDeletedException,
     ComplexNotFoundException as ComplexNotFoundException,
+    ComplexHasNoAddressException as ComplexHasNoAddressException,
 )
 from src.utils.exceptions.core.mast_configs import (
     MastConfigHasActiveMastsException as MastConfigHasActiveMastsException,

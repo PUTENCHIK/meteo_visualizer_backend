@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
@@ -28,7 +28,7 @@ mast_configs_router = APIRouter(prefix="/mast-configs", tags=["Конфиги м
 async def get_mast_configs(
     include_deleted: bool = False,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_READ)),
 ):
     return await service.get_all(include_deleted)
 
@@ -47,7 +47,7 @@ async def get_mast_config(
     id_: UUID,
     include_deleted: bool = False,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_READ)),
 ):
     return await service.get_by_id(id_, include_deleted)
 
@@ -61,7 +61,7 @@ async def get_mast_config(
 async def create_mast_config(
     data: CreateMastConfigSchema,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_CREATE)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_CREATE)),
 ):
     return await service.create_mast_config(data)
 
@@ -80,7 +80,7 @@ async def create_mast_config(
 async def restore_mast_config(
     id_: UUID,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_RESTORE)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_RESTORE)),
 ):
     return await service.restore_mast_config(id_)
 
@@ -99,7 +99,7 @@ async def update_mast_config(
     id_: UUID,
     data: UpdateMastConfigSchema,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_UPDATE)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_UPDATE)),
 ):
     return await service.update_mast_config(id_, data)
 
@@ -117,6 +117,6 @@ async def update_mast_config(
 async def delete_mast_config(
     id_: UUID,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
-    user: User = Depends(required(p.MAST_CONFIG_DELETE)),
+    user: User = Depends(PermissionRequired(p.MAST_CONFIG_DELETE)),
 ):
     return await service.delete_mast_config(id_)

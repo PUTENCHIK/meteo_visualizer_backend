@@ -24,6 +24,7 @@ class SystemPermission(Enum):
     COMPLEX_RESTORE = "complex:restore"
     COMPLEX_UPDATE = "complex:update"
     COMPLEX_DELETE = "complex:delete"
+    COMPLEX_WEBSOCKET = "complex:websocket"
 
     MAST_READ = "mast:read"
     MAST_CREATE = "mast:create"

@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
@@ -23,7 +23,7 @@ permission_router = APIRouter(prefix="/permissions", tags=["Разрешения
 async def get_permissions(
     include_deleted: bool = False,
     service: PermissionService = Depends(ServiceFactory.get_permission_service),
-    user: User = Depends(required(p.PERMISSION_READ)),
+    user: User = Depends(PermissionRequired(p.PERMISSION_READ)),
 ):
     return await service.get_all(include_deleted)
 
@@ -42,6 +42,6 @@ async def update_permission(
     id_: UUID,
     data: UpdatePermissionSchema,
     service: PermissionService = Depends(ServiceFactory.get_permission_service),
-    user: User = Depends(required(p.PERMISSION_UPDATE)),
+    user: User = Depends(PermissionRequired(p.PERMISSION_UPDATE)),
 ):
     return await service.update_permission(id_, data)

@@ -3,7 +3,7 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
@@ -27,7 +27,7 @@ mast_yards_router = APIRouter(prefix="/mast-yards", tags=["Реи мачт"])
 )
 async def get_mast_yards(
     service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
-    user: User = Depends(required(p.MAST_YARD_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_YARD_READ)),
 ):
     return await service.get_all()
 
@@ -45,7 +45,7 @@ async def get_mast_yards(
 async def get_mast_yard(
     id_: UUID,
     service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
-    user: User = Depends(required(p.MAST_YARD_READ)),
+    user: User = Depends(PermissionRequired(p.MAST_YARD_READ)),
 ):
     return await service.get_by_id(id_)
 
@@ -65,7 +65,7 @@ async def get_mast_yard(
 async def create_mast_yard(
     data: CreateMastYardSchema,
     service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
-    user: User = Depends(required(p.MAST_YARD_CREATE)),
+    user: User = Depends(PermissionRequired(p.MAST_YARD_CREATE)),
 ):
     return await service.create_mast_yard(data)
 
@@ -86,7 +86,7 @@ async def update_mast_yard(
     id_: UUID,
     data: UpdateMastYardSchema,
     service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
-    user: User = Depends(required(p.MAST_YARD_UPDATE)),
+    user: User = Depends(PermissionRequired(p.MAST_YARD_UPDATE)),
 ):
     return await service.update_mast_yard(id_, data)
 
@@ -101,6 +101,6 @@ async def update_mast_yard(
 async def delete_mast_yard(
     id_: UUID,
     service: MastYardService = Depends(ServiceFactory.get_mast_yard_service),
-    user: User = Depends(required(p.MAST_YARD_DELETE)),
+    user: User = Depends(PermissionRequired(p.MAST_YARD_DELETE)),
 ):
     return await service.delete_mast_yard(id_)

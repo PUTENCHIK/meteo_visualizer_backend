@@ -1,9 +1,9 @@
 from typing import List
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 
-from src.auth.callable import PermissionRequired as required
+from src.auth.callable import PermissionRequired, WebsocketPermissionRequired
 from src.auth.enums import SystemPermission as p
 from src.factories import ServiceFactory
 from src.models import User
@@ -17,6 +17,7 @@ from src.schemas import (
 )
 from src.services import ComplexService
 from src.utils import get_responses
+from src.managers import GatewayManager
 
 complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 
@@ -31,7 +32,7 @@ complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 async def get_complexes(
     include_deleted: bool = False,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_READ)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_READ)),
 ):
     return await service.get_all_with_favorite(user, include_deleted)
 
@@ -51,7 +52,7 @@ async def get_complex(
     id_: UUID,
     include_deleted: bool = False,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_READ)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_READ)),
 ):
     return await service.get_by_id_with_favorite(id_, user, include_deleted)
 
@@ -65,7 +66,7 @@ async def get_complex(
 async def create_complex(
     data: CreateComplexSchema,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_CREATE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_CREATE)),
 ):
     return await service.create_complex(data, user)
 
@@ -84,7 +85,7 @@ async def create_complex(
 async def restore_complex(
     id_: UUID,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_RESTORE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_RESTORE)),
 ):
     return await service.restore_complex(id_)
 
@@ -103,7 +104,7 @@ async def update_complex(
     id_: UUID,
     data: UpdateComplexSchema,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_UPDATE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_UPDATE)),
 ):
     return await service.update_complex(id_, data)
 
@@ -121,7 +122,7 @@ async def delete_complex(
     id_: UUID,
     force: bool = False,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_DELETE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_DELETE)),
 ):
     return await service.delete_complex(id_, force)
 
@@ -139,7 +140,7 @@ async def delete_complex(
 async def add_complex_to_user_favorites(
     id_: UUID,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_FAVORITE_CREATE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_FAVORITE_CREATE)),
 ):
     return await service.create_complex_favorite(id_, user.id)
 
@@ -156,6 +157,30 @@ async def add_complex_to_user_favorites(
 async def delete_complex_from_user_favorites(
     id_: UUID,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
-    user: User = Depends(required(p.COMPLEX_FAVORITE_DELETE)),
+    user: User = Depends(PermissionRequired(p.COMPLEX_FAVORITE_DELETE)),
 ):
     return await service.delete_complex_favorite(id_, user.id)
+
+
+@complexes_router.websocket('/{id_}/ws')
+async def complex_websocket(
+    id_: UUID,
+    websocket: WebSocket,
+    service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    user: User = Depends(WebsocketPermissionRequired(p.COMPLEX_WEBSOCKET)),
+):
+    try:
+        address = await service.get_address(id_)
+    except Exception as ex:
+        await websocket.close(code=1008)
+        raise ex
+    
+    gateway_manager = GatewayManager()
+    
+    await gateway_manager.connect(id_, websocket, address)
+
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        await gateway_manager.disconnect(id_, websocket)

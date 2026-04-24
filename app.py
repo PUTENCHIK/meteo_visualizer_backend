@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response
 from starlette.exceptions import HTTPException
 
 from src.config import config
@@ -68,7 +67,7 @@ app.add_middleware(
 @app.get("/api/status")
 def status():
     """Проверить доступность API"""
-    return Response("success")
+    return {"status": "success"}
 
 
 @app.exception_handler(AppException)

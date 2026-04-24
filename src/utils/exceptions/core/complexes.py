@@ -11,3 +11,8 @@ class ComplexNotFoundException(NotFoundException):
 class ComplexNotDeletedException(BadRequestException):
     def __init__(self, id_: UUID):
         super().__init__(f"Комплекс ({id_.hex[:8]}) не удалён")
+
+
+class ComplexHasNoAddressException(BadRequestException):
+    def __init__(self, id_: UUID):
+        super().__init__(f"У комплекса ({id_.hex[:8]}) не установлен адрес подключения")

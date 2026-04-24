@@ -58,6 +58,12 @@ class InvalidTokenTypeException(UnauthorizedException):
         super().__init__(f"Неверный тип токена {value}, ожидался {expected}")
 
 
+class TokenMissingException(UnauthorizedException):
+    code = ExceptionCode.TOKEN_INVALID
+
+    def __init__(self):
+        super().__init__("Токен доступа не получен")
+
 class RoleNotSetException(ForbiddenException):
     def __init__(self, user_id: UUID):
         super().__init__(f"У пользователя ({user_id.hex[:8]}) не назначена роль")

@@ -15,6 +15,10 @@ INITIAL_ROLES_PERMISSIONS = [
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
         permission=value.MAST_YARD_READ,
     ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.COMPLEX_WEBSOCKET,
+    ),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_CREATE),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_RESTORE),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_UPDATE),
