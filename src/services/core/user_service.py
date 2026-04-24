@@ -40,6 +40,9 @@ class UserService(AuditableService[User, UserRepository]):
         user = await self.repository.get_by_id(id_, include_deleted)
         if not user:
             raise UserNotFoundException(id_)
+        if user.role:
+            permissions = await self.role_repo.get_role_permissions(user.role.id)
+            user.role.permissions = permissions
         return user
 
     async def get_user_complexes(self, user: User) -> List[ComplexAccess]:

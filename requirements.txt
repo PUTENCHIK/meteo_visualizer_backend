@@ -10,3 +10,4 @@ PyJWT
 python-multipart
 pydantic-settings
 zmq
+tornado>=6.1
