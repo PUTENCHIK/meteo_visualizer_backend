@@ -53,6 +53,7 @@ from src.utils.exceptions.core.roles import (
     RoleNotDeletedException as RoleNotDeletedException,
     RoleNotFoundException as RoleNotFoundException,
     RoleParentCantBeSameException as RoleParentCantBeSameException,
+    RoleParentCircularException as RoleParentCircularException,
 )
 from src.utils.exceptions.core.users import (
     UserNotDeletedException as UserNotDeletedException,

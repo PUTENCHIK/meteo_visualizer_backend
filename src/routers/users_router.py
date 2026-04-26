@@ -13,6 +13,7 @@ from src.schemas import (
     ResponseModel,
     UpdateUserSchema,
     UserWithRoleSchema,
+    UserWithComplexesSchema,
 )
 from src.services import UserService
 from src.utils import get_responses
@@ -29,7 +30,7 @@ async def get_auth_status(
 
 @users_router.get(
     "/",
-    response_model=List[UserWithRoleSchema],
+    response_model=List[UserWithComplexesSchema],
     status_code=200,
     responses=get_responses(),
 )
@@ -72,6 +73,23 @@ async def get_active_user_complexes(
     user: User = Depends(AuthFactory.get_current_user),
 ):
     return await service.get_user_complexes(user)
+
+
+@users_router.get(
+    "/{id_}",
+    response_model=UserWithComplexesSchema,
+    status_code=200,
+    responses=get_responses([
+        ResponseModel(status_code=404, description="Пользователь не найден"),
+    ]),
+)
+async def get_user(
+    id_: UUID,
+    include_deleted: bool = False,
+    service: UserService = Depends(ServiceFactory.get_user_service),
+    user: User = Depends(PermissionRequired(p.USER_READ)),
+):
+    return await service.get_by_id(id_, include_deleted)
 
 
 @users_router.post(

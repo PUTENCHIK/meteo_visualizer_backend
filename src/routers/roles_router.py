@@ -37,6 +37,23 @@ async def get_roles(
     return await service.get_all_with_permissions(include_deleted)
 
 
+@roles_router.get(
+    "/{id_}",
+    response_model=RoleWithPermissionsSchema,
+    status_code=200,
+    responses=get_responses([
+        ResponseModel(status_code=404, description="Роль не найдена"),
+    ]),
+)
+async def get_role(
+    id_: UUID,
+    include_deleted: bool = False,
+    service: RoleService = Depends(ServiceFactory.get_role_service),
+    user: User = Depends(PermissionRequired(p.ROLE_READ)),
+):
+    return await service.get_by_id(id_, include_deleted)
+
+
 @roles_router.post(
     "/",
     response_model=RoleSchema,

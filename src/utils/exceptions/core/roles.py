@@ -32,13 +32,20 @@ class RoleNotDeletedException(BadRequestException):
 class RoleHasChildrenException(ConflictException):
     def __init__(self, id_: UUID, count: int):
         super().__init__(
-            f"Роль ({id_.hex[:8]}) имеет {count} потомков-ролей и не может быть удалена"
+            f"Роль ({id_.hex[:8]}) имеет наследуемые роли ({count}) "
+            f"и не может быть удалена"
         )
 
 
 class RoleHasUsersException(ConflictException):
     def __init__(self, id_: UUID, count: int):
         super().__init__(
-            f"Роль ({id_.hex[:8]}) имеет {count} активных "
-            f"пользователей и не может быть удалена"
+            f"Роль ({id_.hex[:8]}) имеет активных пользователей "
+            f"({count}) и не может быть удалена"
         )
+
+
+class RoleParentCircularException(ConflictException):
+    def __init__(self, parent_name: str):
+        super().__init__(f"Роль не может иметь в качестве родителя "
+                         f"'{parent_name}', так как создаётся цикл")

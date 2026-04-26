@@ -25,6 +25,7 @@ from src.utils.exceptions import (
     RoleNotDeletedException,
     RoleNotFoundException,
     RoleParentCantBeSameException,
+    RoleParentCircularException,
 )
 
 
@@ -74,6 +75,18 @@ class RoleService(AuditableService[Role, RoleRepository]):
 
         return roles
 
+    async def check_deep_parent(self, id_: UUID, parent_id: UUID) -> bool:
+        current_parent_id = parent_id
+
+        while current_parent_id is not None:
+            if id_ == current_parent_id:
+                return True
+            
+            parent = await self.repository.get_by_id(current_parent_id)
+            current_parent_id = parent.parent_id
+        
+        return False
+
     async def create_role(self, data: CreateRoleSchema) -> Role:
         role = await self.repository.get_by_name(data.name)
         if role:
@@ -86,10 +99,9 @@ class RoleService(AuditableService[Role, RoleRepository]):
         if data.id is not None:
             new_role.id = data.id
 
-        role = await self._create(new_role)
-        await self.repository.commit_refresh(role)
+        new_role = await self._create(new_role)
 
-        return role
+        return await self.get_by_id(new_role)
 
     async def generate_role(self, data: CreateRoleSchema) -> Role:
         role = await self.repository.get_by_id(data.id, include_deleted=True)
@@ -169,25 +181,29 @@ class RoleService(AuditableService[Role, RoleRepository]):
             raise RoleNotDeletedException(id_)
 
         role = await self._restore(role)
-        await self.repository.commit_refresh(role)
 
-        return role
+        return await self.get_by_id(id_)
 
     async def update_role(self, id_: UUID, data: UpdateRoleSchema) -> Role:
         role = await self.get_by_id(id_)
 
         if data.name is not None:
             by_name = await self.repository.get_by_name(data.name)
-            if by_name:
-                raise RoleNameAlreadyExistsException(data.name)
+            if by_name and by_name.id != id_:
+                raise RoleNameAlreadyExistsException(data.name, by_name.deleted_at is not None)
 
         if data.parent_id == id_:
             raise RoleParentCantBeSameException()
+        
+        if data.parent_id:
+            parent = await self.get_by_id(data.parent_id)
+            result = await self.check_deep_parent(id_, data.parent_id)
+            if result:
+                raise RoleParentCircularException(parent.name)
 
-        role = await self.repository.update(role, data)
-        await self.repository.commit_refresh(role)
+        await self._update(role, data)
 
-        return role
+        return await self.get_by_id(id_)
 
     async def delete_role(self, id_: UUID, force: bool = False):
         role = await self.get_by_id(id_)

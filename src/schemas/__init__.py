@@ -56,6 +56,7 @@ from src.schemas.roles_permissions import (
 )
 from src.schemas.users import (
     ActiveUserSchema as ActiveUserSchema,
+    UserWithComplexesSchema as UserWithComplexesSchema,
     UpdateUserSchema as UpdateUserSchema,
     UserSchema as UserSchema,
     UserWithRoleSchema as UserWithRoleSchema,
@@ -66,4 +67,5 @@ PermissionWithRolesSchema.model_rebuild()
 ComplexWithCreatorSchema.model_rebuild()
 ComplexWithMastsSchema.model_rebuild()
 ComplexWithFavoriteInfoSchema.model_rebuild()
+UserWithComplexesSchema.model_rebuild()
 ActiveUserSchema.model_rebuild()

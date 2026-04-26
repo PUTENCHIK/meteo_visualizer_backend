@@ -44,8 +44,11 @@ class UserWithRoleSchema(UserSchema):
     role: RoleSchema
 
 
-class ActiveUserSchema(UserWithRoleSchema):
-    role: RoleWithPermissionsSchema
+class UserWithComplexesSchema(UserWithRoleSchema):
     accessible_complexes: List["ComplexSchema"]
     favorite_complexes: List["ComplexSchema"]
     created_complexes: List["ComplexSchema"]
+
+
+class ActiveUserSchema(UserWithComplexesSchema):
+    role: RoleWithPermissionsSchema
