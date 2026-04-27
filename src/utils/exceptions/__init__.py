@@ -39,7 +39,21 @@ from src.utils.exceptions.core.mast_yards import (
     MastYardNotFoundException as MastYardNotFoundException,
 )
 from src.utils.exceptions.core.masts import (
+    MastHasSamePrefixException as MastHasSamePrefixException,
     MastNotFoundException as MastNotFoundException,
+)
+from src.utils.exceptions.core.measure_aliases import (
+    MeasureAliasAlreadyExistsException as MeasureAliasAlreadyExistsException,
+    MeasureAliasNotFoundException as MeasureAliasNotFoundException,
+)
+from src.utils.exceptions.core.measure_colors import (
+    MeasureColorAlreadyExistsException as MeasureColorAlreadyExistsException,
+    MeasureColorNotFoundException as MeasureColorNotFoundException,
+)
+from src.utils.exceptions.core.measures import (
+    InvalidMeasureScaleException as InvalidMeasureScaleException,
+    MeasureNotDeletedException as MeasureNotDeletedException,
+    MeasureNotFoundException as MeasureNotFoundException,
 )
 from src.utils.exceptions.core.permissions import (
     PermissionNameAlreadyExistsException as PermissionNameAlreadyExistsException,

@@ -10,6 +10,7 @@ from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
     ComplexNotFoundException,
     MastConfigNotFoundException,
+    MastHasSamePrefixException,
     MastNotFoundException,
 )
 
@@ -50,6 +51,10 @@ class MastService(AuditableService[Mast, MastRepository]):
         config = await self.config_repo.get_by_id(data.config_id)
         if not config:
             raise MastConfigNotFoundException(data.config_id)
+        
+        by_prefix = await self.repository.get_by_prefix(data.complex_id, data.prefix)
+        if by_prefix:
+            raise MastHasSamePrefixException(data.prefix, by_prefix.id)
 
         new_mast = Mast(**data.model_dump())
         created_mast = await self._create(new_mast)
@@ -63,6 +68,13 @@ class MastService(AuditableService[Mast, MastRepository]):
             config = await self.config_repo.get_by_id(data.config_id)
             if not config:
                 raise MastConfigNotFoundException(data.config_id)
+        
+        if data.prefix is not None:
+            by_prefix = await self.repository.get_by_prefix(
+                mast.complex_id, data.prefix
+            )
+            if by_prefix and by_prefix.id != id_:
+                raise MastHasSamePrefixException(data.prefix, by_prefix.id)
 
         return await self._update(mast, data)
 

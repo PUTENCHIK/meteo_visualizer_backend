@@ -15,7 +15,7 @@ class MeasureColor(AuditableModel, table=True):
     __tablename__ = "measure_colors"
 
     measure_id: UUID = Field(foreign_key="measures.id")
-    value: str = Field(nullable=False, max_length=6)
+    value: str = Field(nullable=False, max_length=7)
     percent: Decimal = Field(sa_column=Column(Numeric(precision=3, scale=2)))
 
     measure: "Measure" = Relationship(back_populates="colors")

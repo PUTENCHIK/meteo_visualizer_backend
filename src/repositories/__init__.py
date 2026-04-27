@@ -20,6 +20,15 @@ from src.repositories.core.mast_repository import MastRepository as MastReposito
 from src.repositories.core.mast_yard_repository import (
     MastYardRepository as MastYardRepository,
 )
+from src.repositories.core.measure_alias_repository import (
+    MeasureAliasRepository as MeasureAliasRepository,
+)
+from src.repositories.core.measure_color_repository import (
+    MeasureColorRepository as MeasureColorRepository,
+)
+from src.repositories.core.measure_repository import (
+    MeasureRepository as MeasureRepository,
+)
 from src.repositories.core.permission_repository import (
     PermissionRepository as PermissionRepository,
 )

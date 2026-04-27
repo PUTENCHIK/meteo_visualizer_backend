@@ -46,5 +46,21 @@ class SystemPermission(Enum):
     COMPLEX_FAVORITE_CREATE = "complex_favorite:create"
     COMPLEX_FAVORITE_DELETE = "complex_favorite:delete"
 
+    MEASURE_READ = "measure:read"
+    MEASURE_CREATE = "measure:create"
+    MEASURE_RESTORE = "measure:restore"
+    MEASURE_UPDATE = "measure:update"
+    MEASURE_DELETE = "measure:delete"
+
+    MEASURE_COLOR_READ = "measure_color:read"
+    MEASURE_COLOR_CREATE = "measure_color:create"
+    MEASURE_COLOR_UPDATE = "measure_color:update"
+    MEASURE_COLOR_DELETE = "measure_color:delete"
+    
+    MEASURE_ALIAS_READ = "measure_alias:read"
+    MEASURE_ALIAS_CREATE = "measure_alias:create"
+    MEASURE_ALIAS_UPDATE = "measure_alias:update"
+    MEASURE_ALIAS_DELETE = "measure_alias:delete"
+
     def __str__(self):
         return self.value

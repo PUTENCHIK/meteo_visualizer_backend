@@ -55,18 +55,19 @@ class MastYardService(AuditableService[MastYard, MastYardRepository]):
         return await self._create(new_yard)
 
     async def update_mast_yard(self, id_: UUID, data: UpdateMastYardSchema) -> MastYard:
-        yard = await self.repository.get_by_id(id_)
+        yard = await self.get_by_id(id_)
 
-        if data.height > yard.config.height:
-            raise InvalidMastYardHeightException(yard.config.height)
-
-        by_height = await self.repository.get_by_height(yard.config.id, data.height)
-        if by_height and by_height.id != yard.id:
-            raise MastYardAlreadyExistsException(by_height.config.name, data.height)
+        if data.height:
+            if data.height > yard.config.height:
+                raise InvalidMastYardHeightException(yard.config.height)
+            
+            by_height = await self.repository.get_by_height(yard.config.id, data.height)
+            if by_height and by_height.id != yard.id:
+                raise MastYardAlreadyExistsException(by_height.config.name, data.height)
 
         return await self._update(yard, data)
 
     async def delete_mast_yard(self, id_: UUID):
-        yard = await self.repository.get_by_id(id_)
+        yard = await self.get_by_id(id_)
 
         await self._delete(yard, force=True)

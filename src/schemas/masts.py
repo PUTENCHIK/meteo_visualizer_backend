@@ -8,6 +8,7 @@ from src.schemas.mast_configs import MastConfigSchema
 
 class MastBaseSchema(BaseSchema):
     config_id: UUID
+    prefix: str
     latitude: Decimal
     longitude: Decimal
     rotation: int
@@ -19,6 +20,7 @@ class CreateMastSchema(MastBaseSchema):
 
 class UpdateMastSchema(MastBaseSchema):
     config_id: Optional[UUID] = None
+    prefix: Optional[str] = None
     latitude: Optional[Decimal] = None
     longitude: Optional[Decimal] = None
     rotation: Optional[int] = None

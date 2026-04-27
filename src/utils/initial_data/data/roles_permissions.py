@@ -23,6 +23,18 @@ INITIAL_ROLES_PERMISSIONS = [
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
         permission=value.USER_UPDATE_SELF,
     ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_READ,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_COLOR_READ,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_ALIAS_READ,
+    ),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_CREATE),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_RESTORE),
     RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_UPDATE),
@@ -101,5 +113,45 @@ INITIAL_ROLES_PERMISSIONS = [
     RP(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
         permission=value.COMPLEX_FAVORITE_DELETE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_CREATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_RESTORE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_UPDATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_DELETE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_COLOR_CREATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_COLOR_UPDATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_COLOR_DELETE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_ALIAS_CREATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_ALIAS_UPDATE,
+    ),
+    RP(
+        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
+        permission=value.MEASURE_ALIAS_DELETE,
     ),
 ]

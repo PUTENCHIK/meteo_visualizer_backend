@@ -17,6 +17,7 @@ class Mast(AuditableModel, table=True):
 
     complex_id: UUID = Field(foreign_key="complexes.id")
     config_id: UUID = Field(foreign_key="mast_configs.id")
+    prefix: str = Field(nullable=False)
     latitude: Decimal = Field(sa_column=Column(Numeric(precision=8, scale=6)))
     longitude: Decimal = Field(sa_column=Column(Numeric(precision=9, scale=6)))
     rotation: int = Field(sa_column=Column(SmallInteger, default=0))

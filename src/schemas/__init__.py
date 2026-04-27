@@ -30,6 +30,22 @@ from src.schemas.masts import (
     MastSchema as MastSchema,
     UpdateMastSchema as UpdateMastSchema,
 )
+from src.schemas.measure_aliases import (
+    CreateMeasureAliasSchema as CreateMeasureAliasSchema,
+    MeasureAliasSchema as MeasureAliasSchema,
+    UpdateMeasureAliasSchema as UpdateMeasureAliasSchema,
+)
+from src.schemas.measure_colors import (
+    CreateMeasureColorSchema as CreateMeasureColorSchema,
+    MeasureColorSchema as MeasureColorSchema,
+    UpdateMeasureColorSchema as UpdateMeasureColorSchema,
+)
+from src.schemas.measures import (
+    CreateMeasureSchema as CreateMeasureSchema,
+    MeasureWithCreatorSchema as MeasureWithCreatorSchema,
+    MeasureWithDependentsSchema as MeasureWithDependentsSchema,
+    UpdateMeasureSchema as UpdateMeasureSchema,
+)
 from src.schemas.permissions import (
     CreatePermissionSchema as CreatePermissionSchema,
     PermissionSchema as PermissionSchema,
@@ -69,3 +85,4 @@ ComplexWithMastsSchema.model_rebuild()
 ComplexWithFavoriteInfoSchema.model_rebuild()
 UserWithComplexesSchema.model_rebuild()
 ActiveUserSchema.model_rebuild()
+MeasureWithDependentsSchema.model_rebuild()

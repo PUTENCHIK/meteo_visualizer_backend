@@ -14,6 +14,9 @@ from src.routers import (
     mast_configs_router,
     mast_yards_router,
     masts_router,
+    measure_aliases_router,
+    measure_colors_router,
+    measures_router,
     permission_router,
     roles_router,
     users_router,
@@ -49,6 +52,9 @@ app.include_router(complexes_router, prefix=api_prefix)
 app.include_router(masts_router, prefix=api_prefix)
 app.include_router(mast_configs_router, prefix=api_prefix)
 app.include_router(mast_yards_router, prefix=api_prefix)
+app.include_router(measures_router, prefix=api_prefix)
+app.include_router(measure_colors_router, prefix=api_prefix)
+app.include_router(measure_aliases_router, prefix=api_prefix)
 
 app.add_middleware(
     CORSMiddleware,
