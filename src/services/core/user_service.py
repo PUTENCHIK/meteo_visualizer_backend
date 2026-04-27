@@ -8,6 +8,7 @@ from src.repositories import ComplexAccessRepository, RoleRepository, UserReposi
 from src.schemas import UpdateUserSchema
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
+    ImpossibleDeleteSelfException,
     RoleNotFoundException,
     UserNotDeletedException,
     UserNotFoundException,
@@ -57,9 +58,8 @@ class UserService(AuditableService[User, UserRepository]):
             raise UserNotDeletedException(id_)
 
         user = await self._restore(user)
-        await self.repository.commit_refresh(user)
 
-        return user
+        return await self.get_by_id(id_)
 
     async def update_user(self, id_: UUID, data: UpdateUserSchema) -> User:
         user = await self.get_by_id(id_)
@@ -69,13 +69,15 @@ class UserService(AuditableService[User, UserRepository]):
             if not role:
                 raise RoleNotFoundException(data.role_id)
 
-        user = await self.repository.update(user, data)
-        await self.repository.commit_refresh(user)
+        user = await self._update(user, data)
 
-        return user
+        return await self.get_by_id(id_)
 
-    async def delete_user(self, id_: UUID, force: bool = False):
+    async def delete_user(self, id_: UUID, user_id: UUID, force: bool = False):
         user = await self.get_by_id(id_)
+
+        if id_ == user_id:
+            raise ImpossibleDeleteSelfException()
 
         # TODO: проверка на связанные комплексы и меры
 

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
 from src.models import User
 from src.schemas import (
     AddPermissionToRoleSchema,
@@ -17,7 +17,7 @@ from src.schemas import (
     RoleWithPermissionsSchema,
     UpdateRoleSchema,
 )
-from src.services import RoleService
+from src.services import AuthService, RoleService
 from src.utils import get_responses
 
 roles_router = APIRouter(prefix="/roles", tags=["Роли пользователей"])
@@ -32,9 +32,12 @@ roles_router = APIRouter(prefix="/roles", tags=["Роли пользовател
 async def get_roles(
     include_deleted: bool = False,
     service: RoleService = Depends(ServiceFactory.get_role_service),
+    auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
     user: User = Depends(PermissionRequired(p.ROLE_READ)),
 ):
-    return await service.get_all_with_permissions(include_deleted)
+    return await service.get_all_with_permissions(
+        include_deleted and await auth_service.has_permission(user, p.ROLE_RESTORE)
+    )
 
 
 @roles_router.get(

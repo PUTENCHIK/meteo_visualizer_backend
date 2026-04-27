@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, Cookie, Depends, Response
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
 from src.schemas import (
     AuthTokensSchema,
     ResponseModel,

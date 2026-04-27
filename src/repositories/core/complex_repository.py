@@ -2,7 +2,7 @@ from typing import override
 
 from sqlalchemy.orm import selectinload
 
-from src.models import Complex, Mast, MastConfig, MastYard, User
+from src.models import Complex, Mast, MastConfig, User
 from src.repositories.abstractions.auditable_repository import AuditableRepository
 
 

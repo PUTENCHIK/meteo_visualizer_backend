@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
 from src.models import User
 from src.schemas import PermissionSchema, ResponseModel, UpdatePermissionSchema
 from src.services import PermissionService

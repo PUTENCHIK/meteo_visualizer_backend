@@ -188,9 +188,12 @@ class RoleService(AuditableService[Role, RoleRepository]):
         role = await self.get_by_id(id_)
 
         if data.name is not None:
-            by_name = await self.repository.get_by_name(data.name)
+            by_name = await self.repository.get_by_name(data.name, include_deleted=True)
             if by_name and by_name.id != id_:
-                raise RoleNameAlreadyExistsException(data.name, by_name.deleted_at is not None)
+                raise RoleNameAlreadyExistsException(
+                    data.name,
+                    by_name.deleted_at is not None
+                )
 
         if data.parent_id == id_:
             raise RoleParentCantBeSameException()

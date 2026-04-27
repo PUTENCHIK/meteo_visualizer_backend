@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends
 
 from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
 from src.models import User
 from src.schemas import (
     CreateMastConfigSchema,
@@ -13,7 +13,7 @@ from src.schemas import (
     ResponseModel,
     UpdateMastConfigSchema,
 )
-from src.services import MastConfigService
+from src.services import AuthService, MastConfigService
 from src.utils import get_responses
 
 mast_configs_router = APIRouter(prefix="/mast-configs", tags=["Конфиги мачт"])
@@ -28,9 +28,13 @@ mast_configs_router = APIRouter(prefix="/mast-configs", tags=["Конфиги м
 async def get_mast_configs(
     include_deleted: bool = False,
     service: MastConfigService = Depends(ServiceFactory.get_mast_config_service),
+    auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
     user: User = Depends(PermissionRequired(p.MAST_CONFIG_READ)),
 ):
-    return await service.get_all(include_deleted)
+    return await service.get_all(
+        include_deleted and 
+        await auth_service.has_permission(user, p.MAST_CONFIG_RESTORE)
+    )
 
 
 @mast_configs_router.get(

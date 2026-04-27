@@ -56,9 +56,9 @@ from src.schemas.roles_permissions import (
 )
 from src.schemas.users import (
     ActiveUserSchema as ActiveUserSchema,
-    UserWithComplexesSchema as UserWithComplexesSchema,
     UpdateUserSchema as UpdateUserSchema,
     UserSchema as UserSchema,
+    UserWithComplexesSchema as UserWithComplexesSchema,
     UserWithRoleSchema as UserWithRoleSchema,
 )
 

@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.auth.enums import SystemPermission
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
 from src.schemas import CreatePermissionSchema
 from src.utils import SingletonMetaclass
 from src.utils.initial_data.data.roles import INITIAL_ROLES

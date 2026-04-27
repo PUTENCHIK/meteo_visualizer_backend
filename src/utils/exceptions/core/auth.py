@@ -1,6 +1,10 @@
+from typing import TYPE_CHECKING, Union
 from uuid import UUID
 
 from src.auth.enums import SystemPermission, TokenType
+
+if TYPE_CHECKING:
+    from src.auth.requirements import RequirementGroup
 from src.utils.exceptions.code.exception_code import ExceptionCode
 from src.utils.exceptions.core.base import (
     ConflictException,
@@ -70,7 +74,7 @@ class RoleNotSetException(ForbiddenException):
 
 
 class PermissionDeniedException(ForbiddenException):
-    def __init__(self, need_perm: SystemPermission):
+    def __init__(self, requirement: Union[SystemPermission, 'RequirementGroup']):
         super().__init__(
-            f"Доступ запрещён, необходимо обладать разрешением '{need_perm.value}'"
+            f"Необходимы разрешения: {requirement}"
         )

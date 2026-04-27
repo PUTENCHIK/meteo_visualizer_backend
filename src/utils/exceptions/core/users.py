@@ -18,3 +18,8 @@ class UserNotFoundException(NotFoundException):
 class UserNotDeletedException(BadRequestException):
     def __init__(self, id_: UUID):
         super().__init__(f"Пользователь ({id_.hex[:8]}) не удалён")
+
+
+class ImpossibleDeleteSelfException(BadRequestException):
+    def __init__(self):
+        super().__init__("Невозможно удалить свой аккаунт")

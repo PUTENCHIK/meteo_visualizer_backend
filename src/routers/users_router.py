@@ -3,19 +3,20 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends
 
-from src.auth.callable import PermissionRequired as PermissionRequired
+from src.auth.callable import PermissionRequired
 from src.auth.enums import SystemPermission as p
-from src.factories import AuthFactory, ServiceFactory
+from src.factories.auth import AuthFactory
+from src.factories.service import ServiceFactory
 from src.models import User
 from src.schemas import (
     ActiveUserSchema,
     ComplexAccessSchema,
     ResponseModel,
     UpdateUserSchema,
-    UserWithRoleSchema,
     UserWithComplexesSchema,
+    UserWithRoleSchema,
 )
-from src.services import UserService
+from src.services import AuthService, UserService
 from src.utils import get_responses
 
 users_router = APIRouter(prefix="/users", tags=["Пользователи"])
@@ -37,9 +38,12 @@ async def get_auth_status(
 async def get_users(
     include_deleted: bool = False,
     service: UserService = Depends(ServiceFactory.get_user_service),
+    auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
     user: User = Depends(PermissionRequired(p.USER_READ)),
 ):
-    return await service.get_all(include_deleted)
+    return await service.get_all(
+        include_deleted and await auth_service.has_permission(user, p.USER_RESTORE)
+    )
 
 
 @users_router.get(
@@ -126,8 +130,15 @@ async def update_user(
     id_: UUID,
     data: UpdateUserSchema,
     service: UserService = Depends(ServiceFactory.get_user_service),
-    user: User = Depends(PermissionRequired(p.USER_UPDATE)),
+    auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
+    user: User = Depends(AuthFactory.get_current_user),
 ):
+    self_update = id_ == user.id
+    if self_update:
+        await auth_service.is_allowed(user, p.USER_UPDATE_SELF)
+    else:
+        await auth_service.is_allowed(user, p.USER_UPDATE)
+
     return await service.update_user(id_, data)
 
 
@@ -136,6 +147,7 @@ async def update_user(
     status_code=204,
     responses=get_responses(
         [
+            ResponseModel(status_code=400, description="Удаление самого себя"),
             ResponseModel(status_code=404, description="Пользователь не найден"),
         ]
     ),
@@ -146,4 +158,4 @@ async def delete_user(
     service: UserService = Depends(ServiceFactory.get_user_service),
     user: User = Depends(PermissionRequired(p.USER_DELETE)),
 ):
-    return await service.delete_user(id_, force)
+    return await service.delete_user(id_, user.id, force)

@@ -1,9 +1,9 @@
-import sys
 import asyncio
+import sys
+
 import uvicorn
 
 from src.config import config
-
 
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

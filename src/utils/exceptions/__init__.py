@@ -23,9 +23,9 @@ from src.utils.exceptions.core.base import (
     UnauthorizedException as UnauthorizedException,
 )
 from src.utils.exceptions.core.complexes import (
+    ComplexHasNoAddressException as ComplexHasNoAddressException,
     ComplexNotDeletedException as ComplexNotDeletedException,
     ComplexNotFoundException as ComplexNotFoundException,
-    ComplexHasNoAddressException as ComplexHasNoAddressException,
 )
 from src.utils.exceptions.core.mast_configs import (
     MastConfigHasActiveMastsException as MastConfigHasActiveMastsException,
@@ -56,6 +56,7 @@ from src.utils.exceptions.core.roles import (
     RoleParentCircularException as RoleParentCircularException,
 )
 from src.utils.exceptions.core.users import (
+    ImpossibleDeleteSelfException as ImpossibleDeleteSelfException,
     UserNotDeletedException as UserNotDeletedException,
     UserNotFoundException as UserNotFoundException,
 )

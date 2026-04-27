@@ -1,8 +1,10 @@
 from typing import Optional
+
 from fastapi import Depends, Query, WebSocket, WebSocketException
 
 from src.auth.enums import SystemPermission
-from src.factories import AuthFactory, ServiceFactory
+from src.factories.auth import AuthFactory
+from src.factories.service import ServiceFactory
 from src.models import User
 from src.services import AuthService, UserService
 from src.utils.exceptions import TokenBlockedException, TokenExpiredException
@@ -34,7 +36,7 @@ class WebsocketPermissionRequired:
 
         try:
             user = await AuthFactory.get_query_user(user_service, token)
-            await auth_service.has_permission(user, self.value)
+            await auth_service.is_allowed(user, self.value)
             return user
         except (TokenBlockedException, TokenExpiredException) as e:
             raise WebSocketException(code=4001, reason=str(e))

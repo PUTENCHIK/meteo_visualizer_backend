@@ -1,9 +1,9 @@
 from typing import Optional, override
 
 from sqlalchemy import func
-from sqlalchemy.orm import selectinload, with_loader_criteria
+from sqlalchemy.orm import selectinload
 
-from src.models import AuditableModel, Complex, Mast, MastConfig, Role, User
+from src.models import Complex, Mast, MastConfig, Role, User
 from src.repositories.abstractions.auditable_repository import AuditableRepository
 
 
@@ -37,11 +37,6 @@ class UserRepository(AuditableRepository[User]):
             .selectinload(Complex.masts)
             .selectinload(Mast.config)
             .selectinload(MastConfig.yards),
-            with_loader_criteria(
-                AuditableModel,
-                lambda cls: getattr(cls, "deleted_at", None) == None,
-                include_aliases=True,
-            ),
         )
 
     async def get_by_login(self, login: str) -> Optional[User]:

@@ -16,9 +16,9 @@ from src.schemas import (
 )
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
+    ComplexHasNoAddressException,
     ComplexNotDeletedException,
     ComplexNotFoundException,
-    ComplexHasNoAddressException,
 )
 
 

@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
 
 from src.auth.callable import PermissionRequired, WebsocketPermissionRequired
 from src.auth.enums import SystemPermission as p
-from src.factories import ServiceFactory
+from src.factories.service import ServiceFactory
+from src.managers import GatewayManager
 from src.models import User
 from src.schemas import (
     ComplexFavoriteSchema,
@@ -15,9 +16,8 @@ from src.schemas import (
     ResponseModel,
     UpdateComplexSchema,
 )
-from src.services import ComplexService
+from src.services import AuthService, ComplexService
 from src.utils import get_responses
-from src.managers import GatewayManager
 
 complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 
@@ -32,9 +32,13 @@ complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
 async def get_complexes(
     include_deleted: bool = False,
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
     user: User = Depends(PermissionRequired(p.COMPLEX_READ)),
 ):
-    return await service.get_all_with_favorite(user, include_deleted)
+    return await service.get_all_with_favorite(
+        user,
+        include_deleted and await auth_service.has_permission(user, p.COMPLEX_RESTORE)
+    )
 
 
 @complexes_router.get(

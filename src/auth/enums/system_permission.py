@@ -16,6 +16,7 @@ class SystemPermission(Enum):
 
     USER_READ = "user:read"
     USER_UPDATE = "user:update"
+    USER_UPDATE_SELF = "user:update_self"
     USER_RESTORE = "user:restore"
     USER_DELETE = "user:delete"
 
@@ -44,3 +45,6 @@ class SystemPermission(Enum):
 
     COMPLEX_FAVORITE_CREATE = "complex_favorite:create"
     COMPLEX_FAVORITE_DELETE = "complex_favorite:delete"
+
+    def __str__(self):
+        return self.value

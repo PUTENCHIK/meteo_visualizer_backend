@@ -1,9 +1,10 @@
 from typing import Optional
-from fastapi import Depends, Request, Query, WebSocket
+
+from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 
 from src.auth.tokens import AccessToken
-from src.factories.service_factory import ServiceFactory
+from src.factories.service.service_factory import ServiceFactory
 from src.managers import TokenManager
 from src.models import User
 from src.services import UserService

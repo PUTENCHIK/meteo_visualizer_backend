@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Optional, Union
 from uuid import UUID
 
 from fastapi import Response
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.auth.enums import SystemPermission
+from src.auth.requirements import RequirementGroup
 from src.auth.tokens import RefreshToken
 from src.managers import PasswordManager, TokenManager
 from src.models import User
@@ -123,17 +124,33 @@ class AuthService:
 
         return AuthTokensSchema(access_token=new_access.jwt)
 
-    async def has_permission(self, user: User, permission: SystemPermission) -> bool:
+    async def has_permission(
+        self,
+        user: User,
+        requirement: Union[SystemPermission, RequirementGroup]
+    ) -> bool:
         if not user.role:
             raise RoleNotSetException(user.id)
 
         all_permissions = await self.role_repo.get_role_permissions(user.role_id)
-        has_perm = any(p.name == permission.value for p in all_permissions)
+        user_perms = {p.name for p in all_permissions}
 
-        if not has_perm:
-            raise PermissionDeniedException(permission)
+        if isinstance(requirement, SystemPermission):
+            has_perm = requirement.value in user_perms
+        else:
+            has_perm = requirement(user_perms)
 
         return has_perm
+    
+    async def is_allowed(
+            self,
+        user: User,
+        requirement: Union[SystemPermission, RequirementGroup]
+    ) -> bool:
+        result = await self.has_permission(user, requirement)
+        if not result:
+            raise PermissionDeniedException(requirement)
+        return result
 
     async def logout(self, refresh_jwt: Optional[str], response: Response):
         try:
