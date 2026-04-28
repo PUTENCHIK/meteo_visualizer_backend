@@ -17,8 +17,7 @@ from src.services import MeasureColorService
 from src.utils import get_responses
 
 measure_colors_router = APIRouter(
-    prefix="/measure-colors",
-    tags=["Цвета пользовательских параметров"]
+    prefix="/measure-colors", tags=["Цвета пользовательских параметров"]
 )
 
 
@@ -97,7 +96,9 @@ async def update_measure_color(
     "/{id_}",
     status_code=204,
     responses=get_responses(
-        [ResponseModel(status_code=404, description="Цвет не найден"),]
+        [
+            ResponseModel(status_code=404, description="Цвет не найден"),
+        ]
     ),
 )
 async def delete_measure_color(

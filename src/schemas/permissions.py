@@ -25,3 +25,7 @@ class PermissionSchema(AuditableModelSchema, PermissionBaseSchema):
 
 class PermissionWithRolesSchema(PermissionSchema):
     roles: List["RoleWithParentSchema"]
+
+
+class PermissionWithRoleInfoSchema(PermissionSchema):
+    is_relative: bool = False

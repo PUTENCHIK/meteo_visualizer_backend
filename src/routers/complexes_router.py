@@ -37,7 +37,7 @@ async def get_complexes(
 ):
     return await service.get_all_with_favorite(
         user,
-        include_deleted and await auth_service.has_permission(user, p.COMPLEX_RESTORE)
+        include_deleted and await auth_service.has_permission(user, p.COMPLEX_RESTORE),
     )
 
 
@@ -166,7 +166,7 @@ async def delete_complex_from_user_favorites(
     return await service.delete_complex_favorite(id_, user.id)
 
 
-@complexes_router.websocket('/{id_}/ws')
+@complexes_router.websocket("/{id_}/ws")
 async def complex_websocket(
     id_: UUID,
     websocket: WebSocket,
@@ -178,9 +178,9 @@ async def complex_websocket(
     except Exception as ex:
         await websocket.close(code=1008)
         raise ex
-    
+
     gateway_manager = GatewayManager()
-    
+
     await gateway_manager.connect(id_, websocket, address)
 
     try:

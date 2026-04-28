@@ -24,24 +24,21 @@ class MeasureAliasRepository(AuditableRepository[MeasureAlias]):
         )
 
     async def get_by_measure(
-        self,
-        measure_id: UUID,
-        include_deleted: bool = False
+        self, measure_id: UUID, include_deleted: bool = False
     ) -> List[MeasureAlias]:
         statement = self._get_all_query(include_deleted).where(
             MeasureAlias.measure_id == measure_id
         )
         result = await self.session.exec(statement)
         return result.all()
-    
+
     async def get_by_name(
         self,
         measure_id: UUID,
         name: str,
     ) -> Optional[MeasureAlias]:
         statement = self._get_all_query().where(
-            MeasureAlias.measure_id == measure_id,
-            MeasureAlias.name == name.lower()
+            MeasureAlias.measure_id == measure_id, MeasureAlias.name == name.lower()
         )
         result = await self.session.exec(statement)
         return result.one_or_none()

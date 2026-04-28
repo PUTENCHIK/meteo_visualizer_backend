@@ -59,9 +59,11 @@ async def get_measure(
     "/",
     response_model=MeasureWithDependentsSchema,
     status_code=201,
-    responses=get_responses([
-        ResponseModel(status_code=400, description="Минимум больше максимума"),
-    ]),
+    responses=get_responses(
+        [
+            ResponseModel(status_code=400, description="Минимум больше максимума"),
+        ]
+    ),
 )
 async def create_measure(
     data: CreateMeasureSchema,

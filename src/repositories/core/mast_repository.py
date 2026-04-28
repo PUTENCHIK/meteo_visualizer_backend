@@ -35,10 +35,8 @@ class MastRepository(AuditableRepository[Mast]):
         )
         result = await self.session.exec(statement)
         return result.all()
-    
-    async def get_by_prefix(
-        self, complex_id: UUID, prefix: str
-    ) -> Optional[Mast]:
+
+    async def get_by_prefix(self, complex_id: UUID, prefix: str) -> Optional[Mast]:
         statement = self._get_all_query().where(
             Mast.complex_id == complex_id, func.lower(Mast.prefix) == prefix.lower()
         )

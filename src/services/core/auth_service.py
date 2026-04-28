@@ -125,14 +125,12 @@ class AuthService:
         return AuthTokensSchema(access_token=new_access.jwt)
 
     async def has_permission(
-        self,
-        user: User,
-        requirement: Union[SystemPermission, RequirementGroup]
+        self, user: User, requirement: Union[SystemPermission, RequirementGroup]
     ) -> bool:
         if not user.role:
             raise RoleNotSetException(user.id)
 
-        all_permissions = await self.role_repo.get_role_permissions(user.role_id)
+        all_permissions = user.role.permissions
         user_perms = {p.name for p in all_permissions}
 
         if isinstance(requirement, SystemPermission):
@@ -141,11 +139,9 @@ class AuthService:
             has_perm = requirement(user_perms)
 
         return has_perm
-    
+
     async def is_allowed(
-            self,
-        user: User,
-        requirement: Union[SystemPermission, RequirementGroup]
+        self, user: User, requirement: Union[SystemPermission, RequirementGroup]
     ) -> bool:
         result = await self.has_permission(user, requirement)
         if not result:

@@ -57,38 +57,20 @@ class RoleService(AuditableService[Role, RoleRepository]):
             raise RoleNotFoundException(id_)
         return role
 
-    async def get_role_with_permissions(self, id_: UUID) -> Role:
-        role = await self.get_by_id(id_)
-        permissions = await self.repository.get_role_permissions(role.id)
-        role.permissions = permissions
-
-        return role
-
-    async def get_all_with_permissions(
-        self, include_deleted: bool = False
-    ) -> List[Role]:
-        roles = await self.repository.get_all(include_deleted)
-        perms_map = await self.repository.get_all_with_permissions(include_deleted)
-
-        for role in roles:
-            role.permissions = perms_map.get(role.id, [])
-
-        return roles
-
     async def check_deep_parent(self, id_: UUID, parent_id: UUID) -> bool:
         current_parent_id = parent_id
 
         while current_parent_id is not None:
             if id_ == current_parent_id:
                 return True
-            
+
             parent = await self.repository.get_by_id(current_parent_id)
             current_parent_id = parent.parent_id
-        
+
         return False
 
     async def create_role(self, data: CreateRoleSchema) -> Role:
-        role = await self.repository.get_by_name(data.name)
+        role = await self.repository.get_by_name(data.name, include_deleted=True)
         if role:
             raise RoleNameAlreadyExistsException(data.name, role.deleted_at is not None)
 
@@ -101,7 +83,7 @@ class RoleService(AuditableService[Role, RoleRepository]):
 
         new_role = await self._create(new_role)
 
-        return await self.get_by_id(new_role)
+        return await self.get_by_id(new_role.id)
 
     async def generate_role(self, data: CreateRoleSchema) -> Role:
         role = await self.repository.get_by_id(data.id, include_deleted=True)
@@ -191,13 +173,12 @@ class RoleService(AuditableService[Role, RoleRepository]):
             by_name = await self.repository.get_by_name(data.name, include_deleted=True)
             if by_name and by_name.id != id_:
                 raise RoleNameAlreadyExistsException(
-                    data.name,
-                    by_name.deleted_at is not None
+                    data.name, by_name.deleted_at is not None
                 )
 
         if data.parent_id == id_:
             raise RoleParentCantBeSameException()
-        
+
         if data.parent_id:
             parent = await self.get_by_id(data.parent_id)
             result = await self.check_deep_parent(id_, data.parent_id)

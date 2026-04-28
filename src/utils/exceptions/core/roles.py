@@ -47,5 +47,7 @@ class RoleHasUsersException(ConflictException):
 
 class RoleParentCircularException(ConflictException):
     def __init__(self, parent_name: str):
-        super().__init__(f"Роль не может иметь в качестве родителя "
-                         f"'{parent_name}', так как создаётся цикл")
+        super().__init__(
+            f"Роль не может иметь в качестве родителя "
+            f"'{parent_name}', так как создаётся цикл"
+        )

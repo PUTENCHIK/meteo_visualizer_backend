@@ -31,14 +31,14 @@ class MeasureColorService(AuditableService[MeasureColor, MeasureColorRepository]
     def __init__(self, session: AsyncSession):
         super().__init__(MeasureColorRepository(session))
         self._measure_repo = MeasureRepository(session)
-    
+
     @override
     async def get_by_id(self, id_, include_deleted=False) -> MeasureColor:
         color = await self.repository.get_by_id(id_, include_deleted)
         if not color:
             raise MeasureColorNotFoundException(id_)
         return color
-    
+
     async def create_measure_color(
         self, data: CreateMeasureColorSchema
     ) -> MeasureColor:
@@ -54,11 +54,9 @@ class MeasureColorService(AuditableService[MeasureColor, MeasureColorRepository]
         new_color = MeasureColor(**data.model_dump())
 
         return await self._create(new_color)
-    
+
     async def update_measure_color(
-        self,
-        id_: UUID,
-        data: UpdateMeasureColorSchema
+        self, id_: UUID, data: UpdateMeasureColorSchema
     ) -> MeasureColor:
         color = await self.get_by_id(id_)
 

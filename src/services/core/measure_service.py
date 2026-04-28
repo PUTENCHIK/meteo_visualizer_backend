@@ -34,11 +34,11 @@ class MeasureService(AuditableService[Measure, MeasureRepository]):
     @property
     def user_repo(self) -> UserRepository:
         return self._user_repo
-    
+
     @property
     def measure_color_repo(self) -> MeasureColorRepository:
         return self._measure_color_repo
-    
+
     @property
     def measure_alias_repo(self) -> MeasureAliasRepository:
         return self._measure_alias_repo
@@ -48,19 +48,19 @@ class MeasureService(AuditableService[Measure, MeasureRepository]):
         self._user_repo = UserRepository(session)
         self._measure_color_repo = MeasureColorRepository(session)
         self._measure_alias_repo = MeasureAliasRepository(session)
-    
+
     @override
     async def get_by_id(self, id_, include_deleted=False) -> Measure:
         measure = await self.repository.get_by_id(id_, include_deleted)
         if not measure:
             raise MeasureNotFoundException(id_)
         return measure
-    
+
     def validate_min_max(self, min: int, max: int) -> bool:
         if min >= max:
             raise InvalidMeasureScaleException(min, max)
         return True
-    
+
     async def create_measure(self, data: CreateMeasureSchema, user: User) -> Measure:
         self.validate_min_max(data.min, data.max)
 
@@ -71,7 +71,7 @@ class MeasureService(AuditableService[Measure, MeasureRepository]):
         new_measure = await self._create(new_measure)
 
         return await self.get_by_id(new_measure.id)
-    
+
     async def restore_measure(self, id_: UUID) -> Measure:
         measure = await self.get_by_id(id_, include_deleted=True)
 
@@ -81,26 +81,23 @@ class MeasureService(AuditableService[Measure, MeasureRepository]):
         colors = await self.measure_color_repo.get_by_measure(id_, include_deleted=True)
         for color in colors:
             await self.measure_color_repo.restore(color)
-        
+
         aliases = await self.measure_alias_repo.get_by_measure(
-            id_,
-            include_deleted=True
+            id_, include_deleted=True
         )
         for alias in aliases:
             await self.measure_alias_repo.restore(alias)
 
         return await self._restore(measure)
 
-    async def update_measure(
-        self, id_: UUID, data: UpdateMeasureSchema
-    ) -> Measure:
+    async def update_measure(self, id_: UUID, data: UpdateMeasureSchema) -> Measure:
         measure = await self.get_by_id(id_)
-        
+
         if data.min and data.max:
             self.validate_min_max(data.min, data.max)
 
         return await self._update(measure, data)
-    
+
     async def delete_measure(self, id_: UUID, force: bool = False):
         measure = await self.get_by_id(id_)
 

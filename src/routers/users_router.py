@@ -83,9 +83,11 @@ async def get_active_user_complexes(
     "/{id_}",
     response_model=UserWithComplexesSchema,
     status_code=200,
-    responses=get_responses([
-        ResponseModel(status_code=404, description="Пользователь не найден"),
-    ]),
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Пользователь не найден"),
+        ]
+    ),
 )
 async def get_user(
     id_: UUID,

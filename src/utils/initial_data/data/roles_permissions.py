@@ -1,157 +1,185 @@
 from uuid import UUID
 
-from src.auth.enums import SystemPermission as value
-from src.schemas import CreateRolePermissionSchema as RP
+from src.auth.enums import SystemPermission as p
+from src.schemas import CreateRolePermissionSchema as l
 
 INITIAL_ROLES_PERMISSIONS = [
-    RP(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=value.ROLE_READ),
-    RP(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=value.COMPLEX_READ),
-    RP(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=value.MAST_READ),
-    RP(
+    l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.ROLE_READ),
+    l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.COMPLEX_READ),
+    l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.MAST_READ),
+    l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.MAST_CONFIG_READ),
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MAST_CONFIG_READ,
+        permission=p.MAST_YARD_READ,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MAST_YARD_READ,
+        permission=p.COMPLEX_WEBSOCKET,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.COMPLEX_WEBSOCKET,
+        permission=p.USER_UPDATE_SELF,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.USER_UPDATE_SELF,
+        permission=p.MEASURE_READ,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_READ,
+        permission=p.MEASURE_COLOR_READ,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_COLOR_READ,
+        permission=p.MEASURE_ALIAS_READ,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_ALIAS_READ,
-    ),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_CREATE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_RESTORE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_UPDATE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.ROLE_DELETE),
-    RP(
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.ROLE_READ),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.COMPLEX_READ),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.MAST_READ),
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.ROLE_PERMISSION_CREATE,
+        permission=p.MAST_CONFIG_READ,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.ROLE_PERMISSION_DELETE,
+        permission=p.MAST_YARD_READ,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.PERMISSION_READ,
+        permission=p.COMPLEX_WEBSOCKET,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.PERMISSION_UPDATE,
+        permission=p.USER_UPDATE_SELF,
     ),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_READ),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_RESTORE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_UPDATE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.USER_DELETE),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.COMPLEX_CREATE,
+        permission=p.MEASURE_READ,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.COMPLEX_RESTORE,
+        permission=p.MEASURE_COLOR_READ,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.COMPLEX_UPDATE,
+        permission=p.MEASURE_ALIAS_READ,
     ),
-    RP(
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.ROLE_CREATE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.ROLE_RESTORE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.ROLE_UPDATE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.ROLE_DELETE),
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.COMPLEX_DELETE,
+        permission=p.ROLE_PERMISSION_CREATE,
     ),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.MAST_CREATE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.MAST_UPDATE),
-    RP(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=value.MAST_DELETE),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_CONFIG_CREATE,
+        permission=p.ROLE_PERMISSION_DELETE,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_CONFIG_RESTORE,
+        permission=p.PERMISSION_READ,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_CONFIG_UPDATE,
+        permission=p.PERMISSION_UPDATE,
     ),
-    RP(
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.USER_READ),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.USER_RESTORE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.USER_UPDATE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.USER_DELETE),
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_CONFIG_DELETE,
+        permission=p.COMPLEX_CREATE,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_YARD_CREATE,
+        permission=p.COMPLEX_RESTORE,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_YARD_UPDATE,
+        permission=p.COMPLEX_UPDATE,
     ),
-    RP(
+    l(
         role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
-        permission=value.MAST_YARD_DELETE,
+        permission=p.COMPLEX_DELETE,
     ),
-    RP(
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.MAST_CREATE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.MAST_UPDATE),
+    l(role_id=UUID("24bc9172186d4a3383a7289ef09983c5"), permission=p.MAST_DELETE),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_CONFIG_CREATE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_CONFIG_RESTORE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_CONFIG_UPDATE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_CONFIG_DELETE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_YARD_CREATE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_YARD_UPDATE,
+    ),
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MAST_YARD_DELETE,
+    ),
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.COMPLEX_FAVORITE_CREATE,
+        permission=p.COMPLEX_FAVORITE_CREATE,
     ),
-    RP(
+    l(
         role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.COMPLEX_FAVORITE_DELETE,
+        permission=p.COMPLEX_FAVORITE_DELETE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_CREATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_CREATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_RESTORE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_RESTORE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_UPDATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_UPDATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_DELETE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_DELETE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_COLOR_CREATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_COLOR_CREATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_COLOR_UPDATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_COLOR_UPDATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_COLOR_DELETE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_COLOR_DELETE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_ALIAS_CREATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_ALIAS_CREATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_ALIAS_UPDATE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_ALIAS_UPDATE,
     ),
-    RP(
-        role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"),
-        permission=value.MEASURE_ALIAS_DELETE,
+    l(
+        role_id=UUID("24bc9172186d4a3383a7289ef09983c5"),
+        permission=p.MEASURE_ALIAS_DELETE,
     ),
 ]

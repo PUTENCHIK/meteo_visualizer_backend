@@ -93,7 +93,9 @@ async def update_measure_alias(
     "/{id_}",
     status_code=204,
     responses=get_responses(
-        [ResponseModel(status_code=404, description="Псевдоним не найден"),]
+        [
+            ResponseModel(status_code=404, description="Псевдоним не найден"),
+        ]
     ),
 )
 async def delete_measure_alias(
@@ -102,4 +104,3 @@ async def delete_measure_alias(
     user: User = Depends(PermissionRequired(p.MEASURE_ALIAS_DELETE)),
 ):
     return await service.delete_measure_alias(id_)
-

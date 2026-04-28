@@ -56,7 +56,7 @@ class SystemPermission(Enum):
     MEASURE_COLOR_CREATE = "measure_color:create"
     MEASURE_COLOR_UPDATE = "measure_color:update"
     MEASURE_COLOR_DELETE = "measure_color:delete"
-    
+
     MEASURE_ALIAS_READ = "measure_alias:read"
     MEASURE_ALIAS_CREATE = "measure_alias:create"
     MEASURE_ALIAS_UPDATE = "measure_alias:update"

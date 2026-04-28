@@ -53,15 +53,15 @@ class ServiceFactory:
     @staticmethod
     async def get_mast_yard_service(session: AsyncSession = Depends(get_session)):
         return MastYardService(session)
-    
+
     @staticmethod
     async def get_measure_service(session: AsyncSession = Depends(get_session)):
         return MeasureService(session)
-    
+
     @staticmethod
     async def get_measure_color_service(session: AsyncSession = Depends(get_session)):
         return MeasureColorService(session)
-    
+
     @staticmethod
     async def get_measure_alias_service(session: AsyncSession = Depends(get_session)):
         return MeasureAliasService(session)

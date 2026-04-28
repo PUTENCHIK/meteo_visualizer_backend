@@ -60,7 +60,7 @@ class MastYardService(AuditableService[MastYard, MastYardRepository]):
         if data.height:
             if data.height > yard.config.height:
                 raise InvalidMastYardHeightException(yard.config.height)
-            
+
             by_height = await self.repository.get_by_height(yard.config.id, data.height)
             if by_height and by_height.id != yard.id:
                 raise MastYardAlreadyExistsException(by_height.config.name, data.height)

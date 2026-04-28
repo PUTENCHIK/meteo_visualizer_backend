@@ -22,18 +22,16 @@ class MeasureColorRepository(AuditableRepository[MeasureColor]):
         return statement.options(
             selectinload(MeasureColor.measure),
         )
-    
+
     async def get_by_measure(
-        self,
-        measure_id: UUID,
-        include_deleted: bool = False
+        self, measure_id: UUID, include_deleted: bool = False
     ) -> List[MeasureColor]:
         statement = self._get_all_query(include_deleted).where(
             MeasureColor.measure_id == measure_id
         )
         result = await self.session.exec(statement)
         return result.all()
-    
+
     async def get_by_percent(
         self,
         measure_id: UUID,

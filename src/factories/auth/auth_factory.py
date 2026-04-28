@@ -37,7 +37,7 @@ class AuthFactory:
         user_service: UserService = Depends(ServiceFactory.get_user_service),
     ) -> User:
         return await AuthFactory.get_user_by_token(token, user_service)
-    get_user_by_token
+
     @staticmethod
     async def get_query_user(
         user_service: UserService,

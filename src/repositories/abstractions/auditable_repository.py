@@ -33,7 +33,7 @@ class AuditableRepository(BaseRepository[A]):
                 with_loader_criteria(
                     AuditableModel,
                     lambda cls: getattr(cls, "deleted_at", None) == None,
-                    include_aliases=True
+                    include_aliases=True,
                 )
             )
         return statement.order_by(self.model.updated_at.desc())

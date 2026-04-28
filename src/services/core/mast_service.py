@@ -51,7 +51,7 @@ class MastService(AuditableService[Mast, MastRepository]):
         config = await self.config_repo.get_by_id(data.config_id)
         if not config:
             raise MastConfigNotFoundException(data.config_id)
-        
+
         by_prefix = await self.repository.get_by_prefix(data.complex_id, data.prefix)
         if by_prefix:
             raise MastHasSamePrefixException(data.prefix, by_prefix.id)
@@ -68,7 +68,7 @@ class MastService(AuditableService[Mast, MastRepository]):
             config = await self.config_repo.get_by_id(data.config_id)
             if not config:
                 raise MastConfigNotFoundException(data.config_id)
-        
+
         if data.prefix is not None:
             by_prefix = await self.repository.get_by_prefix(
                 mast.complex_id, data.prefix

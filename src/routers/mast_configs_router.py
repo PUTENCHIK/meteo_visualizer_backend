@@ -32,8 +32,8 @@ async def get_mast_configs(
     user: User = Depends(PermissionRequired(p.MAST_CONFIG_READ)),
 ):
     return await service.get_all(
-        include_deleted and 
-        await auth_service.has_permission(user, p.MAST_CONFIG_RESTORE)
+        include_deleted
+        and await auth_service.has_permission(user, p.MAST_CONFIG_RESTORE)
     )
 
 

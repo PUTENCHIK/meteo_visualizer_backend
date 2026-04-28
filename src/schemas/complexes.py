@@ -33,12 +33,12 @@ class UpdateComplexSchema(ComplexBaseSchema, SecretkeySchema):
 
 
 class ComplexSchema(AuditableModelSchema, ComplexBaseSchema):
-    creator_id: UUID
+    creator_id: Optional[UUID] = None
     is_secreted: bool
 
 
 class ComplexWithCreatorSchema(ComplexSchema):
-    creator: "UserWithRoleSchema"
+    creator: Optional["UserWithRoleSchema"] = None
 
 
 class ComplexWithMastsSchema(ComplexWithCreatorSchema):

@@ -25,10 +25,6 @@ class ComplexRepository(AuditableRepository[Complex]):
                 .selectinload(Mast.config)
                 .selectinload(MastConfig.yards)
             ),
-            selectinload(
-                Complex.users_with_access
-            ).selectinload(User.role),
-            selectinload(
-                Complex.users_with_favorite
-            ).selectinload(User.role),
+            selectinload(Complex.users_with_access).selectinload(User.role),
+            selectinload(Complex.users_with_favorite).selectinload(User.role),
         )

@@ -2,6 +2,7 @@ from typing import List, Optional, override
 from uuid import UUID
 
 from sqlalchemy.orm import selectinload
+from sqlmodel import select
 
 from src.models import RolePermission
 from src.repositories.abstractions.many_to_many_repository import ManyToManyRepository
@@ -39,4 +40,14 @@ class RolePermissionRepository(ManyToManyRepository[RolePermission]):
     async def get_by_role(self, role_id: UUID) -> List[RolePermission]:
         statement = super()._get_all_query().where(RolePermission.role_id == role_id)
         result = await self.session.exec(statement)
+        return result.all()
+
+    async def get_relatives_to_role(
+        self, role_id, permission_ids: List[UUID]
+    ) -> List[UUID]:
+        statement = select(RolePermission.permission_id).where(
+            RolePermission.role_id == role_id,
+            RolePermission.permission_id.in_(permission_ids),
+        )
+        result = await self._session.exec(statement)
         return result.all()

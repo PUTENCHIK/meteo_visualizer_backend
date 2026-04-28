@@ -5,19 +5,21 @@ from fastapi import APIRouter, Depends
 
 from src.auth.callable import PermissionRequired as PermissionRequired
 from src.auth.enums import SystemPermission as p
+from src.auth.requirements import AllOfRequirements as all
 from src.factories.service import ServiceFactory
 from src.models import User
 from src.schemas import (
     AddPermissionToRoleSchema,
     CreateRoleSchema,
     DeletePermissionFromRoleSchema,
+    PermissionWithRoleInfoSchema,
     ResponseModel,
     RolePermissionSchema,
     RoleSchema,
     RoleWithPermissionsSchema,
     UpdateRoleSchema,
 )
-from src.services import AuthService, RoleService
+from src.services import AuthService, PermissionService, RoleService
 from src.utils import get_responses
 
 roles_router = APIRouter(prefix="/roles", tags=["Роли пользователей"])
@@ -35,7 +37,7 @@ async def get_roles(
     auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
     user: User = Depends(PermissionRequired(p.ROLE_READ)),
 ):
-    return await service.get_all_with_permissions(
+    return await service.get_all(
         include_deleted and await auth_service.has_permission(user, p.ROLE_RESTORE)
     )
 
@@ -44,9 +46,11 @@ async def get_roles(
     "/{id_}",
     response_model=RoleWithPermissionsSchema,
     status_code=200,
-    responses=get_responses([
-        ResponseModel(status_code=404, description="Роль не найдена"),
-    ]),
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Роль не найдена"),
+        ]
+    ),
 )
 async def get_role(
     id_: UUID,
@@ -55,6 +59,24 @@ async def get_role(
     user: User = Depends(PermissionRequired(p.ROLE_READ)),
 ):
     return await service.get_by_id(id_, include_deleted)
+
+
+@roles_router.get(
+    "/{id_}/permissions",
+    response_model=List[PermissionWithRoleInfoSchema],
+    status_code=200,
+    responses=get_responses(
+        [
+            ResponseModel(status_code=404, description="Роль не найдена"),
+        ]
+    ),
+)
+async def get_role_permissions(
+    id_: UUID,
+    service: PermissionService = Depends(ServiceFactory.get_permission_service),
+    user: User = Depends(PermissionRequired(all(p.ROLE_READ, p.PERMISSION_READ))),
+):
+    return await service.get_all_with_relative_of_role(id_)
 
 
 @roles_router.post(
@@ -71,24 +93,6 @@ async def create_role(
     user: User = Depends(PermissionRequired(p.ROLE_CREATE)),
 ):
     return await service.create_role(data)
-
-
-@roles_router.get(
-    "/{id_}",
-    response_model=RoleWithPermissionsSchema,
-    status_code=200,
-    responses=get_responses(
-        [
-            ResponseModel(status_code=404, description="Роль не найдена"),
-        ]
-    ),
-)
-async def get_role_with_permissions(
-    id_: UUID,
-    service: RoleService = Depends(ServiceFactory.get_role_service),
-    user: User = Depends(PermissionRequired(p.ROLE_READ)),
-):
-    return await service.get_role_with_permissions(id_)
 
 
 @roles_router.post(

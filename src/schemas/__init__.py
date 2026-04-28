@@ -49,6 +49,7 @@ from src.schemas.measures import (
 from src.schemas.permissions import (
     CreatePermissionSchema as CreatePermissionSchema,
     PermissionSchema as PermissionSchema,
+    PermissionWithRoleInfoSchema as PermissionWithRoleInfoSchema,
     PermissionWithRolesSchema as PermissionWithRolesSchema,
     UpdatePermissionSchema as UpdatePermissionSchema,
 )

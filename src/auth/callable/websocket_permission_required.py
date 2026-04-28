@@ -27,7 +27,7 @@ class WebsocketPermissionRequired:
 
     async def __call__(
         self,
-        websocket: WebSocket, 
+        websocket: WebSocket,
         token: Optional[str] = Query(None, alias="token"),
         auth_service: AuthService = Depends(ServiceFactory.get_auth_service),
         user_service: UserService = Depends(ServiceFactory.get_user_service),
@@ -42,4 +42,3 @@ class WebsocketPermissionRequired:
             raise WebSocketException(code=4001, reason=str(e))
         except Exception as e:
             raise WebSocketException(code=1008, reason=str(e))
-

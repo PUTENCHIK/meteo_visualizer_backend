@@ -18,14 +18,14 @@ class Complex(AuditableModel, table=True):
     __tablename__ = "complexes"
 
     name: str = Field(nullable=False, index=True)
-    creator_id: UUID = Field(foreign_key="users.id")
+    creator_id: Optional[UUID] = Field(foreign_key="users.id", default=None)
     secretkey: Optional[str] = Field(default=None)
     is_private: bool = Field(default=False, index=True)
     latitude: Decimal = Field(sa_column=Column(Numeric(precision=8, scale=6)))
     longitude: Decimal = Field(sa_column=Column(Numeric(precision=9, scale=6)))
     address: Optional[str] = Field(default=None)
 
-    creator: "User" = Relationship(back_populates="created_complexes")
+    creator: Optional["User"] = Relationship(back_populates="created_complexes")
     masts: List["Mast"] = Relationship(back_populates="complex")
 
     users_with_access: List["User"] = Relationship(

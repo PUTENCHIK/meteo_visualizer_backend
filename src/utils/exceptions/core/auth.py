@@ -68,13 +68,12 @@ class TokenMissingException(UnauthorizedException):
     def __init__(self):
         super().__init__("Токен доступа не получен")
 
+
 class RoleNotSetException(ForbiddenException):
     def __init__(self, user_id: UUID):
         super().__init__(f"У пользователя ({user_id.hex[:8]}) не назначена роль")
 
 
 class PermissionDeniedException(ForbiddenException):
-    def __init__(self, requirement: Union[SystemPermission, 'RequirementGroup']):
-        super().__init__(
-            f"Необходимы разрешения: {requirement}"
-        )
+    def __init__(self, requirement: Union[SystemPermission, "RequirementGroup"]):
+        super().__init__(f"Необходимы разрешения: {requirement}")
