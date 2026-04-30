@@ -78,6 +78,9 @@ from src.schemas.users import (
     UserWithComplexesSchema as UserWithComplexesSchema,
     UserWithRoleSchema as UserWithRoleSchema,
 )
+from src.schemas.websocket import (
+    ComplexMessageSchema as ComplexMessageSchema,
+)
 
 RoleWithPermissionsSchema.model_rebuild()
 PermissionWithRolesSchema.model_rebuild()

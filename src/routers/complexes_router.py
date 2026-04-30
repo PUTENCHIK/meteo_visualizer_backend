@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, Query, WebSocket, WebSocketDisconnect
 
 from src.auth.callable import PermissionRequired, WebsocketPermissionRequired
 from src.auth.enums import SystemPermission as p
@@ -170,6 +170,7 @@ async def delete_complex_from_user_favorites(
 async def complex_websocket(
     id_: UUID,
     websocket: WebSocket,
+    aliases: Optional[str] = Query(None),
     service: ComplexService = Depends(ServiceFactory.get_complex_service),
     user: User = Depends(WebsocketPermissionRequired(p.COMPLEX_WEBSOCKET)),
 ):
@@ -179,9 +180,11 @@ async def complex_websocket(
         await websocket.close(code=1008)
         raise ex
 
+    aliases = set(aliases.split(",")) if aliases else set()
+
     gateway_manager = GatewayManager()
 
-    await gateway_manager.connect(id_, websocket, address)
+    await gateway_manager.connect(id_, websocket, address, aliases)
 
     try:
         while True:

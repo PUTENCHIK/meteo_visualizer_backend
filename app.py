@@ -1,3 +1,5 @@
+import asyncio
+import sys
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -27,6 +29,10 @@ from src.utils.exceptions import (
     ExceptionCode,
 )
 from src.utils.initial_data import InitialDataManager
+
+
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 @asynccontextmanager
