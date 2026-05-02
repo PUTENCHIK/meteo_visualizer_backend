@@ -16,7 +16,6 @@ from src.schemas import (
 )
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
-    ComplexHasNoAddressException,
     ComplexNotDeletedException,
     ComplexNotFoundException,
 )
@@ -135,10 +134,3 @@ class ComplexService(AuditableService[Complex, ComplexRepository]):
         if link:
             await self.complex_favorite_repo.delete(link)
             await self.complex_favorite_repo.commit()
-
-    async def get_address(self, id_: UUID) -> str:
-        complex = await self.get_by_id(id_)
-        if complex.address is None:
-            raise ComplexHasNoAddressException(id_)
-
-        return complex.address

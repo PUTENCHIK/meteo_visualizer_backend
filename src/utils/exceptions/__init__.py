@@ -47,6 +47,7 @@ from src.utils.exceptions.core.measure_aliases import (
     MeasureAliasNotFoundException as MeasureAliasNotFoundException,
 )
 from src.utils.exceptions.core.measure_colors import (
+    MaxMeasureColorsException as MaxMeasureColorsException,
     MeasureColorAlreadyExistsException as MeasureColorAlreadyExistsException,
     MeasureColorNotFoundException as MeasureColorNotFoundException,
 )
@@ -54,6 +55,9 @@ from src.utils.exceptions.core.measures import (
     InvalidMeasureScaleException as InvalidMeasureScaleException,
     MeasureNotDeletedException as MeasureNotDeletedException,
     MeasureNotFoundException as MeasureNotFoundException,
+)
+from src.utils.exceptions.core.parser import (
+    InvalidWeatherDeviceNameError as InvalidWeatherDeviceNameError,
 )
 from src.utils.exceptions.core.permissions import (
     PermissionNameAlreadyExistsException as PermissionNameAlreadyExistsException,

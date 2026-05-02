@@ -13,3 +13,10 @@ class MeasureColorAlreadyExistsException(BadRequestException):
         super().__init__(
             f"Для параметра '{measure_name}' уже установлен цвет в {percent}"
         )
+
+
+class MaxMeasureColorsException(BadRequestException):
+    def __init__(self, measure_name: str, limit: int):
+        super().__init__(
+            f"Предел в {limit} цветов у параметра {measure_name} достигнут"
+        )

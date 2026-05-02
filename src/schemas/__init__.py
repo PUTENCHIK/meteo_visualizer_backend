@@ -80,6 +80,9 @@ from src.schemas.users import (
 )
 from src.schemas.websocket import (
     ComplexMessageSchema as ComplexMessageSchema,
+    MessagePayloadSchema as MessagePayloadSchema,
+    PayloadItem as PayloadItem,
+    WeatherDeviceName as WeatherDeviceName,
 )
 
 RoleWithPermissionsSchema.model_rebuild()

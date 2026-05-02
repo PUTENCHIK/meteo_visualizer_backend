@@ -11,6 +11,7 @@ from src.repositories import (
 from src.schemas import CreateMeasureColorSchema, UpdateMeasureColorSchema
 from src.services.abstractions.auditable_service import AuditableService
 from src.utils.exceptions import (
+    MaxMeasureColorsException,
     MeasureColorAlreadyExistsException,
     MeasureColorNotFoundException,
     MeasureNotFoundException,
@@ -21,6 +22,8 @@ class MeasureColorService(AuditableService[MeasureColor, MeasureColorRepository]
     """
     Сервис цветов пользовательских параметров визуализации
     """
+
+    MAX_COLORS: int = 8
 
     _measure_repo: MeasureRepository
 
@@ -43,9 +46,11 @@ class MeasureColorService(AuditableService[MeasureColor, MeasureColorRepository]
         self, data: CreateMeasureColorSchema
     ) -> MeasureColor:
         measure = await self.measure_repo.get_by_id(data.measure_id)
-
         if not measure:
             raise MeasureNotFoundException(data.measure_id)
+        
+        if len(measure.colors) > self.MAX_COLORS:
+            raise MaxMeasureColorsException(measure.name, self.MAX_COLORS)
 
         by_percent = await self.repository.get_by_percent(data.measure_id, data.percent)
         if by_percent:

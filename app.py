@@ -30,7 +30,6 @@ from src.utils.exceptions import (
 )
 from src.utils.initial_data import InitialDataManager
 
-
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 

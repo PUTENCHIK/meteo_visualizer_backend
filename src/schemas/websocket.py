@@ -5,9 +5,9 @@ from src.schemas.base import BaseSchema
 
 
 class PayloadItem(BaseSchema):
-    description: str
+    description: Optional[str]
     name: str
-    units: str
+    units: Optional[str]
     value: float
 
 
@@ -36,7 +36,24 @@ class PollResult(BaseSchema):
     debug_info: Optional[DebugInfo] = None
 
 
-class ComplexMessageSchema(BaseSchema):
+class PollableNameSchema(BaseSchema):
     pollable_name: str
+
+
+class ComplexMessageSchema(PollableNameSchema):
     pipelines: Optional[List[str]] = []
     poll_result: PollResult = None
+
+
+class WeatherDeviceName(BaseSchema):
+    mast: str
+    yard: int
+    num: int
+    name: str
+    postfix: Optional[str] = None
+
+
+class MessagePayloadSchema(PollableNameSchema):
+    device_name: WeatherDeviceName
+    timestamp: float
+    items: List[PayloadItem]

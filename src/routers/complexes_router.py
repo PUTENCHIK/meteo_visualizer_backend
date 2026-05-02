@@ -16,7 +16,7 @@ from src.schemas import (
     ResponseModel,
     UpdateComplexSchema,
 )
-from src.services import AuthService, ComplexService
+from src.services import AuthService, ComplexService, MeasureService
 from src.utils import get_responses
 
 complexes_router = APIRouter(prefix="/complexes", tags=["Комплексы"])
@@ -170,21 +170,23 @@ async def delete_complex_from_user_favorites(
 async def complex_websocket(
     id_: UUID,
     websocket: WebSocket,
-    aliases: Optional[str] = Query(None),
-    service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    measure_id: Optional[UUID] = Query(None),
+    complex_service: ComplexService = Depends(ServiceFactory.get_complex_service),
+    measure_service: MeasureService = Depends(ServiceFactory.get_measure_service),
     user: User = Depends(WebsocketPermissionRequired(p.COMPLEX_WEBSOCKET)),
 ):
     try:
-        address = await service.get_address(id_)
+        complex = await complex_service.get_by_id(id_)
+        complex = ComplexWithMastsSchema.model_validate(complex)
+        measure = await measure_service.get_by_id(measure_id)
+        aliases = set([alias.name for alias in measure.aliases])
     except Exception as ex:
         await websocket.close(code=1008)
         raise ex
 
-    aliases = set(aliases.split(",")) if aliases else set()
-
     gateway_manager = GatewayManager()
 
-    await gateway_manager.connect(id_, websocket, address, aliases)
+    await gateway_manager.connect(complex, websocket, aliases)
 
     try:
         while True:
