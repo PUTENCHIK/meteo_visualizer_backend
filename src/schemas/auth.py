@@ -1,3 +1,5 @@
+from pydantic import ConfigDict
+
 from src.schemas.base import BaseSchema
 from src.schemas.users import LoginSchema, NamesSchema, PasswordSchema
 
@@ -14,5 +16,4 @@ class AuthTokensSchema(BaseSchema):
     access_token: str
     token_type: str = "bearer"
 
-    class Config:
-        populate_by_name = True
+    model_config = ConfigDict(populate_by_name=True)

@@ -11,3 +11,6 @@ python-multipart
 pydantic-settings
 zmq
 tornado>=6.1
+pytest
+httpx
+pytest-cov

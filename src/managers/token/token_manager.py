@@ -2,7 +2,7 @@ from typing import Optional, Tuple
 from uuid import UUID
 
 import redis.asyncio as redis
-from redis import Redis
+from redis.asyncio import Redis
 
 from src.auth.tokens import AccessToken, AuthToken, RefreshToken
 from src.config import config

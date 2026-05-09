@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    await TokenManager().client.close()
+    await TokenManager().client.aclose()
 
 
 app = FastAPI(lifespan=lifespan)

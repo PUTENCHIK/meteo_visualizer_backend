@@ -1,0 +1,14 @@
+[run]
+source = .
+
+omit =
+    main.py
+    migrations/*
+    _docs/*
+    tests/*
+    .venv/*
+    venv/*
+
+[report]
+show_missing = True
+precision = 1
