@@ -4,6 +4,7 @@ from src.auth.enums import SystemPermission as p
 from src.schemas import CreateRolePermissionSchema as l
 
 INITIAL_ROLES_PERMISSIONS = [
+    l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.USER_READ),
     l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.ROLE_READ),
     l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.COMPLEX_READ),
     l(role_id=UUID("af03a5cc6f4d4a52aedb26092e88bcc3"), permission=p.MAST_READ),
