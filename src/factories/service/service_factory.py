@@ -5,6 +5,7 @@ from src.db import get_session
 from src.services import (
     AuthService,
     ComplexService,
+    InitialDataService,
     MastConfigService,
     MastService,
     MastYardService,
@@ -21,6 +22,10 @@ class ServiceFactory:
     """
     Фабрика для генерации сервисов приложения
     """
+
+    @staticmethod
+    async def get_initial_data_service(session: AsyncSession = Depends(get_session)):
+        return InitialDataService(session)
 
     @staticmethod
     async def get_auth_service(session: AsyncSession = Depends(get_session)):

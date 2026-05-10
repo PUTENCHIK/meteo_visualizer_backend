@@ -48,7 +48,7 @@ class MeasureColorService(AuditableService[MeasureColor, MeasureColorRepository]
         measure = await self.measure_repo.get_by_id(data.measure_id)
         if not measure:
             raise MeasureNotFoundException(data.measure_id)
-        
+
         if len(measure.colors) > self.MAX_COLORS:
             raise MaxMeasureColorsException(measure.name, self.MAX_COLORS)
 

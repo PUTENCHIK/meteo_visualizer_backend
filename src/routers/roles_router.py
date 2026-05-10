@@ -170,7 +170,7 @@ async def add_permission_to_role(
     service: RoleService = Depends(ServiceFactory.get_role_service),
     user: User = Depends(PermissionRequired(p.ROLE_PERMISSION_CREATE)),
 ):
-    return await service.create_roles_permissions(id_, data)
+    return await service.create_roles_permissions(id_, data, user.id)
 
 
 @roles_router.delete(

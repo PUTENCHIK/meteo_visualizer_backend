@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from src.utils.exceptions.core.base import (
@@ -15,8 +16,14 @@ class RoleNameAlreadyExistsException(ConflictException):
 
 
 class RoleNotFoundException(NotFoundException):
-    def __init__(self, id_: UUID):
-        super().__init__(f"Роль ({id_.hex[:8]}) не найдена")
+    def __init__(self, id_: Optional[UUID] = None, name: Optional[str] = None):
+        if id_ is not None:
+            idtf = f" ({id_.hex[:8]})"
+        elif name is not None:
+            idtf = f" '{name}'"
+        else:
+            idtf = ""
+        super().__init__(f"Роль{idtf} не найдена")
 
 
 class RoleParentCantBeSameException(BadRequestException):

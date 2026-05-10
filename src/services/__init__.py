@@ -1,5 +1,8 @@
 from src.services.core.auth_service import AuthService as AuthService
 from src.services.core.complex_service import ComplexService as ComplexService
+from src.services.core.initial_data_service import (
+    InitialDataService as InitialDataService,
+)
 from src.services.core.mast_config_service import MastConfigService as MastConfigService
 from src.services.core.mast_service import MastService as MastService
 from src.services.core.mast_yards_service import MastYardService as MastYardService

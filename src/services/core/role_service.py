@@ -11,7 +11,6 @@ from src.repositories import (
 )
 from src.schemas import (
     AddPermissionToRoleSchema,
-    CreateRolePermissionSchema,
     CreateRoleSchema,
     DeletePermissionFromRoleSchema,
     UpdateRoleSchema,
@@ -85,77 +84,6 @@ class RoleService(AuditableService[Role, RoleRepository]):
 
         return await self.get_by_id(new_role.id)
 
-    async def generate_role(self, data: CreateRoleSchema) -> Role:
-        role = await self.repository.get_by_id(data.id, include_deleted=True)
-
-        if role:
-            if role.deleted_at is not None:
-                await self.repository.restore(role)
-            return role
-
-        by_name = await self.repository.get_by_name(data.name, include_deleted=True)
-        if by_name:
-            if by_name.deleted_at is not None:
-                await self.repository.restore(role)
-            return role
-
-        new_role = Role(
-            id=data.id,
-            name=data.name,
-            parent_id=data.parent_id,
-        )
-        await self.repository.add(new_role)
-        return new_role
-
-    async def generate_role_permission(
-        self, data: CreateRolePermissionSchema, check_role_exists: bool = False
-    ) -> RolePermission:
-        if check_role_exists:
-            await self.get_by_id(data.role_id)
-        permission = await self.permission_repo.get_by_name(data.permission.value)
-        if not permission:
-            raise PermissionNotFoundException(name=data.permission.value)
-        link = await self.role_permission_repo.get_by_ids(data.role_id, permission.id)
-        if not link:
-            link = RolePermission(
-                role_id=data.role_id, permission_id=permission.id, creator_id=None
-            )
-            await self.role_permission_repo.add(link)
-
-        return link
-
-    async def create_roles_permissions(
-        self, role_id: UUID, data: List[AddPermissionToRoleSchema]
-    ) -> List[RolePermission]:
-        await self.get_by_id(role_id)
-
-        for link_data in data:
-            await self.generate_role_permission(
-                CreateRolePermissionSchema(
-                    role_id=role_id, permission=link_data.permission
-                )
-            )
-
-        await self.role_permission_repo.commit()
-
-        return await self.role_permission_repo.get_by_role(role_id)
-
-    async def delete_roles_permissions(
-        self, role_id: UUID, data: List[DeletePermissionFromRoleSchema]
-    ):
-        await self.get_by_id(role_id)
-        for link_data in data:
-            permission = await self.permission_repo.get_by_name(
-                link_data.permission.value
-            )
-            if not permission:
-                raise PermissionNotFoundException(name=link_data.permission.value)
-            link = await self.role_permission_repo.get_by_ids(role_id, permission.id)
-            if link:
-                await self.role_permission_repo.delete(link)
-
-        await self.role_permission_repo.commit()
-
     async def restore_role(self, id_: UUID) -> Role:
         role = await self.get_by_id(id_, include_deleted=True)
 
@@ -199,3 +127,41 @@ class RoleService(AuditableService[Role, RoleRepository]):
             raise RoleHasUsersException(id_, len(role.users))
 
         await self._delete(role, force)
+
+    async def create_roles_permissions(
+        self, role_id: UUID, data: List[AddPermissionToRoleSchema], creator_id: UUID
+    ) -> List[RolePermission]:
+        await self.get_by_id(role_id)
+
+        for link_data in data:
+            permission = await self.permission_repo.get_by_name(
+                link_data.permission.value
+            )
+            if not permission:
+                raise PermissionNotFoundException(name=link_data.permission.value)
+            link = await self.role_permission_repo.get_by_ids(role_id, permission.id)
+            if not link:
+                link = RolePermission(
+                    role_id=role_id, permission_id=permission.id, creator_id=creator_id
+                )
+                await self.role_permission_repo.add(link)
+
+        await self.role_permission_repo.commit()
+
+        return await self.role_permission_repo.get_by_role(role_id)
+
+    async def delete_roles_permissions(
+        self, role_id: UUID, data: List[DeletePermissionFromRoleSchema]
+    ):
+        await self.get_by_id(role_id)
+        for link_data in data:
+            permission = await self.permission_repo.get_by_name(
+                link_data.permission.value
+            )
+            if not permission:
+                raise PermissionNotFoundException(name=link_data.permission.value)
+            link = await self.role_permission_repo.get_by_ids(role_id, permission.id)
+            if link:
+                await self.role_permission_repo.delete(link)
+
+        await self.role_permission_repo.commit()

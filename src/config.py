@@ -13,6 +13,8 @@ class Config(BaseSettings):
     allow_origins: Union[str, List[str]]
     auth_token_secret_key: str
     auth_token_algorithm: str
+    initial_data_path: str
+    initial_users_password: str
 
     @field_validator("allow_origins", mode="before")
     @classmethod

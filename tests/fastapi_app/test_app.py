@@ -8,7 +8,7 @@ class TestApp:
         """
 
         # Действие
-        response = test_client.get('/api/status')
+        response = test_client.get("/api/status")
 
         # Проверка
         assert response.status_code == 200

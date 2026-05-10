@@ -7,11 +7,10 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.auth.enums import SystemPermission
 from src.auth.requirements import RequirementGroup
 from src.auth.tokens import RefreshToken
-from src.managers import PasswordManager, TokenManager
+from src.managers import InitialDataManager, PasswordManager, TokenManager
 from src.models import User
 from src.repositories import RoleRepository, UserRepository
 from src.schemas import AuthTokensSchema, SigninSchema, SignupSchema
-from src.utils.constants import SIGNUP_ROLE_ID
 from src.utils.exceptions import (
     InvalidPasswordException,
     InvalidRefreshTokenException,
@@ -32,6 +31,7 @@ class AuthService:
     _role_repo: RoleRepository
     _token_manager: TokenManager = TokenManager()
     _password_manager: PasswordManager = PasswordManager()
+    _initial_data_manager: InitialDataManager = InitialDataManager()
 
     @property
     def user_repo(self) -> UserRepository:
@@ -48,6 +48,10 @@ class AuthService:
     @property
     def password_manager(self) -> PasswordManager:
         return self._password_manager
+
+    @property
+    def initial_data_manager(self) -> InitialDataManager:
+        return self._initial_data_manager
 
     def __init__(self, session: AsyncSession):
         self._user_repo = UserRepository(session)
@@ -87,7 +91,7 @@ class AuthService:
 
         new_user = User(
             **data.model_dump(exclude={"password"}),
-            role_id=SIGNUP_ROLE_ID,
+            role_id=self.initial_data_manager.base_role_id,
             password_hash=password_hash,
         )
         db_user = await self.user_repo.add(new_user)

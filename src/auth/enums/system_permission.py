@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class SystemPermission(Enum):
+class SystemPermission(str, Enum):
     ROLE_READ = "role:read"
     ROLE_CREATE = "role:create"
     ROLE_RESTORE = "role:restore"

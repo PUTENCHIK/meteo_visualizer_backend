@@ -14,3 +14,4 @@ tornado>=6.1
 pytest
 httpx
 pytest-cov
+pyyaml

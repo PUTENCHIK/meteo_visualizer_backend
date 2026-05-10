@@ -1,8 +1,8 @@
 import pytest
 
 from src.schemas import WeatherDeviceName
-from src.utils.parser import WeatherDeviceParser
 from src.utils.exceptions import InvalidWeatherDeviceNameError
+from src.utils.parser import WeatherDeviceParser
 
 
 class TestWeatherDeviceParser:
@@ -29,7 +29,7 @@ class TestWeatherDeviceParser:
         assert result.num == station_number
         assert result.name == device_name
         assert result.postfix is None
-    
+
     def test_parse_name__valid_name_without_num__no_exceptions(self):
         """
         Проверка на возвращение ожидаемого объекта WeatherDeviceName при передаче
@@ -52,7 +52,7 @@ class TestWeatherDeviceParser:
         assert result.num == 1
         assert result.name == device_name
         assert result.postfix is None
-    
+
     def test_parse_name__name_without_mast_name__invalid_name_exception(self):
         """
         Проверка на исключение InvalidWeatherDeviceNameError при передаче имени без

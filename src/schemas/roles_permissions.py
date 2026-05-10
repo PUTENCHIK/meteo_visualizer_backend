@@ -1,5 +1,4 @@
 from typing import Optional
-from uuid import UUID
 
 from src.auth.enums import SystemPermission
 from src.schemas.base import BaseSchema, ManyToManyModelSchema
@@ -14,10 +13,6 @@ class AddPermissionToRoleSchema(BaseSchema):
 
 class DeletePermissionFromRoleSchema(AddPermissionToRoleSchema):
     pass
-
-
-class CreateRolePermissionSchema(AddPermissionToRoleSchema):
-    role_id: UUID
 
 
 class RolePermissionSchema(ManyToManyModelSchema):

@@ -15,6 +15,11 @@ from src.schemas.complexes import (
     CreateComplexSchema as CreateComplexSchema,
     UpdateComplexSchema as UpdateComplexSchema,
 )
+from src.schemas.initial_data import (
+    InitialDataSchema as InitialDataSchema,
+    InitialRoleSchema as InitialRoleSchema,
+    InitialUserSchema as InitialUserSchema,
+)
 from src.schemas.mast_configs import (
     CreateMastConfigSchema as CreateMastConfigSchema,
     MastConfigSchema as MastConfigSchema,
@@ -67,7 +72,6 @@ from src.schemas.roles import (
 )
 from src.schemas.roles_permissions import (
     AddPermissionToRoleSchema as AddPermissionToRoleSchema,
-    CreateRolePermissionSchema as CreateRolePermissionSchema,
     DeletePermissionFromRoleSchema as DeletePermissionFromRoleSchema,
     RolePermissionSchema as RolePermissionSchema,
 )

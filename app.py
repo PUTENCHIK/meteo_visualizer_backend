@@ -23,12 +23,12 @@ from src.routers import (
     roles_router,
     users_router,
 )
+from src.services import InitialDataService
 from src.utils import create_error_response
 from src.utils.exceptions import (
     AppException,
     ExceptionCode,
 )
-from src.utils.initial_data import InitialDataManager
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -38,9 +38,8 @@ if sys.platform == "win32":
 async def lifespan(app: FastAPI):
     await TokenManager().ping()
     async with async_session_maker() as session:
-        manager = InitialDataManager()
-        await manager.sync(session)
-        await session.commit()
+        service = InitialDataService(session)
+        await service.sync()
 
     yield
 
